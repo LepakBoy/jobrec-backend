@@ -6,7 +6,7 @@ const bcrypt = require("bcrypt");
 const sendMail = require("../../helper/email");
 
 module.exports = {
-  registerPekerja: async (req, res) => {
+  registerWorker: async (req, res) => {
     try {
       const { username, name, email, password, nohp } = req.body;
 
@@ -48,7 +48,8 @@ module.exports = {
         attachment: [],
       };
 
-      await sendMail.verificationAccount(setDataEmail);
+      // disable while development
+      // await sendMail.verificationAccount(setDataEmail);
 
       const result = await authModel.register(setData);
       return helperWrapper.response(res, 200, `get data`, result);
@@ -79,6 +80,23 @@ module.exports = {
         `success activate account`,
         result
       );
+    } catch (error) {
+      return helperWrapper.response(
+        res,
+        400,
+        `bad request ${error.message}`,
+        null
+      );
+    }
+  },
+  login: async (req, res) => {
+    try {
+      const { email, password } = req.body;
+      const checkUserData = await authModel.checkUserData(email);
+
+      if (checkUserData.length < 1) {
+        return helperWrapper.response(res, 400, `email not registred`, null);
+      }
     } catch (error) {
       return helperWrapper.response(
         res,
