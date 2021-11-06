@@ -1,0 +1,121 @@
+{
+	"info": {
+		"_postman_id": "b2ab0926-3c4f-42be-a3ce-74f412930298",
+		"name": "jobrec",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "nohp",
+									"value": "55544adasd",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "fi",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "amdfikri35@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "fikri awok",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{deb}}/auth/register?nohp=08333",
+							"host": [
+								"{{deb}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "pekerjatiga",
+									"disabled": true
+								},
+								{
+									"key": "name",
+									"value": "pekerja tiga",
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": "pekerjatiga",
+									"disabled": true
+								},
+								{
+									"key": "email",
+									"value": "pekerjatiga@mail.com",
+									"disabled": true
+								},
+								{
+									"key": "nohp",
+									"value": "08333"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "pasword",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{deb}}/auth./login",
+							"host": [
+								"{{deb}}"
+							],
+							"path": [
+								"auth.",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

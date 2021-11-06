@@ -91,12 +91,19 @@ module.exports = {
   },
   login: async (req, res) => {
     try {
-      const { email, password } = req.body;
-      const checkUserData = await authModel.checkUserData(email);
+      const { email, username, nohp } = req.body;
+      const checkUserData = await authModel.checkUserData(
+        username,
+        email,
+        nohp
+      );
 
-      if (checkUserData.length < 1) {
-        return helperWrapper.response(res, 400, `email not registred`, null);
-      }
+      // if (checkUserData.length < 1) {
+      //   return helperWrapper.response(res, 400, `email not registred`, null);
+      // }
+
+      console.log(checkUserData);
+      return helperWrapper.response(res, 200, `success login`, checkUserData);
     } catch (error) {
       return helperWrapper.response(
         res,
