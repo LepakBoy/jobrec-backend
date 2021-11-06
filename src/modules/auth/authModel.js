@@ -1,10 +1,9 @@
 const connection = require("../../config/mysql");
-const connecton = require("../../config/mysql");
 
 module.exports = {
   checkUserData: (username, email, nohp) =>
     new Promise((resolve, reject) => {
-      connecton.query(
+      connection.query(
         `SELECT * FROM pekerja WHERE username = '${username}' OR email = '${email}' OR nohp  = '${nohp}'  `,
 
         (error, result) => {
@@ -36,6 +35,20 @@ module.exports = {
       connection.query(
         "UPDATE pekerja SET accountStatus = ? WHERE username = ?",
         [data.status, data.username],
+        (error, result) => {
+          if (!error) {
+            resolve(result);
+          } else {
+            reject(new Error(`SQL : ${error.sqlMessage}`));
+          }
+        }
+      );
+    }),
+  getUserByUsername: (username) =>
+    new Promise((resolve, reject) => {
+      connection.query(
+        `SELECT * FROM pekerja WHERE username = "${username}"`,
+
         (error, result) => {
           if (!error) {
             resolve(result);
