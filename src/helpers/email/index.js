@@ -42,7 +42,6 @@ module.exports = {
         if (error) {
           reject(error);
         } else {
-          console.log(`Email sent !${info.response}`);
           resolve(info.response);
         }
       });
