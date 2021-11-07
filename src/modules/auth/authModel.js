@@ -15,10 +15,10 @@ module.exports = {
         }
       );
     }),
-  checkPerekrutData: (username, email, nohp) =>
+  checkRecruiterData: (email, nohp) =>
     new Promise((resolve, reject) => {
       connection.query(
-        `SELECT * FROM perekrut WHERE email = '${email}'`,
+        `SELECT * FROM perekrut WHERE  email = '${email}' OR nohp  = '${nohp}'  `,
 
         (error, result) => {
           if (!error) {
@@ -44,11 +44,40 @@ module.exports = {
         }
       });
     }),
+  registerRecruiter: (data) =>
+    new Promise((resolve, reject) => {
+      connection.query("INSERT INTO perekrut SET ?", data, (error, result) => {
+        if (!error) {
+          const newResult = {
+            id: result.insertId,
+            ...data,
+          };
+          delete newResult.passowrd;
+          resolve(newResult);
+        } else {
+          reject(new Error(`SQL : ${error.sqlMessage}`));
+        }
+      });
+    }),
   activationAccount: (data) =>
     new Promise((resolve, reject) => {
       connection.query(
         "UPDATE pekerja SET accountStatus = ? WHERE username = ?",
         [data.status, data.username],
+        (error, result) => {
+          if (!error) {
+            resolve(result);
+          } else {
+            reject(new Error(`SQL : ${error.sqlMessage}`));
+          }
+        }
+      );
+    }),
+  activationRecruiterAccount: (data) =>
+    new Promise((resolve, reject) => {
+      connection.query(
+        "UPDATE perekrut SET accountStatus = ? WHERE id = ?",
+        [data.status, data.id],
         (error, result) => {
           if (!error) {
             resolve(result);
