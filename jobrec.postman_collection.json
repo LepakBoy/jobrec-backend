@@ -18,17 +18,17 @@
 							"urlencoded": [
 								{
 									"key": "nohp",
-									"value": "55544adasd",
+									"value": "08123",
 									"type": "text"
 								},
 								{
 									"key": "username",
-									"value": "fi",
+									"value": "fikri",
 									"type": "text"
 								},
 								{
 									"key": "email",
-									"value": "amdfikri35@gmail.com",
+									"value": "amdfikri35@gmail.comsdfaf",
 									"type": "text"
 								},
 								{
@@ -44,7 +44,7 @@
 							]
 						},
 						"url": {
-							"raw": "{{deb}}/auth/register?nohp=08333",
+							"raw": "{{deb}}/auth/register",
 							"host": [
 								"{{deb}}"
 							],
@@ -72,10 +72,6 @@
 									"key": "email",
 									"value": "pekerjatiga@mail.com",
 									"disabled": true
-								},
-								{
-									"key": "nohp",
-									"value": "08333"
 								}
 							]
 						}
@@ -92,30 +88,90 @@
 							"urlencoded": [
 								{
 									"key": "email",
-									"value": "",
+									"value": "amdfikri35@gmail.com",
 									"type": "text"
 								},
 								{
-									"key": "pasword",
-									"value": "",
+									"key": "password",
+									"value": "123",
 									"type": "text"
+								},
+								{
+									"key": "nohp",
+									"value": "321",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "username",
+									"value": "bejo",
+									"type": "text",
+									"disabled": true
 								}
 							]
 						},
 						"url": {
-							"raw": "{{deb}}/auth./login",
+							"raw": "{{deb}}/auth/login",
 							"host": [
 								"{{deb}}"
 							],
 							"path": [
-								"auth.",
+								"auth",
 								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{deb}}/auth/logout",
+							"host": [
+								"{{deb}}"
+							],
+							"path": [
+								"auth",
+								"logout"
 							]
 						}
 					},
 					"response": []
 				}
 			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImZpIiwibmFtZSI6ImZpa3JpIGF3b2siLCJlbWFpbCI6ImFtZGZpa3JpMzVAZ21haWwuY29tIiwibm9ocCI6IjU1NTQ0YWRhc2QiLCJ0eXBlSm9iIjoiIiwiam9iZGVzayI6bnVsbCwiZG9taXNpbGkiOm51bGwsImFjY291bnRTdGF0dXMiOiJhY3RpdmUiLCJ1cmxfaWciOm51bGwsInVybF9naXRsYWIiOm51bGwsInVybF9naXRodWIiOm51bGwsImRlc2tyaXBzaSI6bnVsbCwiYXZhdGFyIjpudWxsLCJjcmVhdGVkQXQiOiIyMDIxLTExLTA3VDA1OjE2OjM3LjAwMFoiLCJ1cGRhdGVkQXQiOm51bGwsImlhdCI6MTYzNjI2MzY3NiwiZXhwIjoxNjM2MjY3Mjc2fQ.ZERTEm6Pm2yvgIvUJL7KucFuThlz8OvzO3NoFjE0uLo",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }
