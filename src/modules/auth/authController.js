@@ -1,10 +1,10 @@
+const authModel = require("./authModel");
 const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
-const helperWrapper = require("../../helper/");
-const authModel = require("./authModel");
+const helperWrapper = require("../../helpers/wrapper");
 const bcrypt = require("bcrypt");
-const sendMail = require("../../helper/email");
-require("dotenv");
+const sendMail = require("../../helpers/email");
+require("dotenv").config();
 
 module.exports = {
   registerWorker: async (req, res) => {
@@ -29,11 +29,26 @@ module.exports = {
       if (checkUserData.length > 0) {
         // console.log(checkUserData[0].username);
         if (checkUserData[0].username === setData.username) {
-          return helperWrapper.response(res, 400, `username sama`, null);
+          return helperWrapper.response(
+            res,
+            400,
+            `Username Telah Digunakan`,
+            null
+          );
         } else if (checkUserData[0].email === setData.email) {
-          return helperWrapper.response(res, 400, `email sama`, null);
+          return helperWrapper.response(
+            res,
+            400,
+            `Email Telah Digunakan`,
+            null
+          );
         } else if (checkUserData[0].nohp === setData.nohp) {
-          return helperWrapper.response(res, 400, `no hp sama`, null);
+          return helperWrapper.response(
+            res,
+            400,
+            `Nomor Telefon Telah Digunakan`,
+            null
+          );
         }
       }
 
@@ -44,7 +59,7 @@ module.exports = {
         data: {
           name: setData.name,
           email: email,
-          link: `http://localhost:3000/auth/activate-account/${setData.username}`,
+          link: `${process.env.APP_URL}auth/activate-account/${setData.username}`,
         },
         attachment: [],
       };
@@ -55,7 +70,6 @@ module.exports = {
       const result = await authModel.register(setData);
       return helperWrapper.response(res, 200, `get data`, result);
     } catch (error) {
-      console.log(error);
       return helperWrapper.response(
         res,
         400,
