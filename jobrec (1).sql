@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.2
+-- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 06, 2021 at 02:10 PM
--- Server version: 10.4.11-MariaDB
--- PHP Version: 7.4.6
+-- Generation Time: Nov 07, 2021 at 05:17 AM
+-- Server version: 10.4.21-MariaDB
+-- PHP Version: 8.0.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -51,13 +51,7 @@ CREATE TABLE `pekerja` (
 --
 
 INSERT INTO `pekerja` (`username`, `name`, `email`, `password`, `nohp`, `jobdesk`, `domisili`, `accountStatus`, `url_ig`, `url_gitlab`, `url_github`, `deskripsi`, `avatar`, `isActive`, `createdAt`, `updatedAt`) VALUES
-('fi', 'fikri awok', 'amdfikri35@gmail.com', '$2b$10$XlHUOBbjkPU7Tfq8IN4FzeJmbxvKW.w6nTK9YE..xF0Q8smmdUgxS', '55544adasd', NULL, NULL, 'notActive', NULL, NULL, NULL, NULL, NULL, NULL, '2021-11-06 11:58:21', NULL),
-('fikriiiiiiii', 'fikri awok', 'amdfikri35@gmail.comd', '$2b$10$dZa5xAsz3uTIpP6Hem8BluNu/TZKxGBiLeDiYCL0CUQq2G2eLN.by', '555', NULL, NULL, 'notActive', NULL, NULL, NULL, NULL, NULL, NULL, '2021-11-06 11:56:06', NULL),
-('fikriiiiiiii44', 'fikri awok', 'fikrinadzif35@gmail.com', '$2b$10$tAEaueVxRXt1gbf5U63OV.jwZYt613ctRf.Sd.dES92enjGhY7.hK', '55544', NULL, NULL, 'notActive', NULL, NULL, NULL, NULL, NULL, NULL, '2021-11-06 11:57:42', NULL),
-('pekerjadua', 'pekerja dua', 'pekerjadua@mail.com', 'pekerjadua', '081233', 'freelancer', NULL, 'notActive', NULL, NULL, NULL, NULL, NULL, NULL, '2021-11-06 06:46:25', NULL),
-('pekerjaempat', 'pekerja empat', 'pekerjaempat@mail.com', '$2b$10$VWQ122U.vByDurK6G.83Y.AgoBuVSM0m73YZ.jgO9c6phTseImuPO', '444', NULL, NULL, 'notActive', NULL, NULL, NULL, NULL, NULL, NULL, '2021-11-06 10:22:07', NULL),
-('pekerjasatu', 'pekerja satu', 'pekerjasatu@mail.com', 'pekerjasatu', '08123', 'freelancer', NULL, 'notActive', NULL, NULL, NULL, NULL, NULL, NULL, '2021-11-06 06:45:23', NULL),
-('pekerjasatusdadada', 'pekerja tiga', 'pekerjasatu@mail.comasdasd', '123', '081232342343', NULL, NULL, 'notActive', NULL, NULL, NULL, NULL, NULL, NULL, '2021-11-06 10:18:11', NULL);
+('ez', 'ezlife', 'ezlife9909@gmail.com', '$2b$10$2uNWxhZ7kGwfLlrQhJgKLe.Ly3fZMIUFp5FBUjHVGwTx6w30dusey', '555443123adasd', NULL, NULL, 'notActive', NULL, NULL, NULL, NULL, NULL, NULL, '2021-11-06 16:30:25', NULL);
 
 -- --------------------------------------------------------
 
@@ -103,10 +97,10 @@ CREATE TABLE `perekrut` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `portfolio`
+-- Table structure for table `portofolio`
 --
 
-CREATE TABLE `portfolio` (
+CREATE TABLE `portofolio` (
   `id` int(11) NOT NULL,
   `username` varchar(100) NOT NULL,
   `nama_applikasi` varchar(100) NOT NULL,
@@ -131,6 +125,16 @@ CREATE TABLE `skill` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
+-- Dumping data for table `skill`
+--
+
+INSERT INTO `skill` (`id`, `username`, `nama_skill`, `createdAt`, `updatedAt`) VALUES
+(1, 'ez', 'Php', '2021-11-06 16:49:32', NULL),
+(2, 'ez', 'JSsX', '2021-11-06 16:50:10', NULL),
+(3, 'ez', 'JS', '2021-11-06 16:50:22', NULL),
+(4, 'ez', 'JS', '2021-11-06 16:50:35', NULL);
+
+--
 -- Indexes for dumped tables
 --
 
@@ -147,9 +151,15 @@ ALTER TABLE `pengalaman`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `portfolio`
+-- Indexes for table `perekrut`
 --
-ALTER TABLE `portfolio`
+ALTER TABLE `perekrut`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `portofolio`
+--
+ALTER TABLE `portofolio`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -157,6 +167,34 @@ ALTER TABLE `portfolio`
 --
 ALTER TABLE `skill`
   ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `pengalaman`
+--
+ALTER TABLE `pengalaman`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `perekrut`
+--
+ALTER TABLE `perekrut`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `portofolio`
+--
+ALTER TABLE `portofolio`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+
+--
+-- AUTO_INCREMENT for table `skill`
+--
+ALTER TABLE `skill`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

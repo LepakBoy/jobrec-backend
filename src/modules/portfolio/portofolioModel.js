@@ -1,9 +1,9 @@
 const connection = require("../../config/mysql");
 module.exports = {
-  getAllSkillByUsername: (username) =>
+  getAllPortofolioByUsername: (username) =>
     new Promise((resolve, reject) => {
       connection.query(
-        `SELECT * FROM skill where username='${username}'`,
+        `SELECT * FROM portofolio where username='${username}'`,
         (err, res) => {
           if (!err) {
             resolve(res);
@@ -13,20 +13,10 @@ module.exports = {
         }
       );
     }),
-  getSkillById: (id) =>
-    new Promise((resolve, reject) => {
-      connection.query(`SELECT * FROM skill where id='${id}'`, (err, res) => {
-        if (!err) {
-          resolve(res);
-        } else {
-          reject(new Error(`SQL: ${err.sqlMessage}`));
-        }
-      });
-    }),
-  getSkillBySkillName: (username, nama_skill) =>
+  getPortofolioById: (id) =>
     new Promise((resolve, reject) => {
       connection.query(
-        `SELECT * FROM skill where nama_skill = '${nama_skill}' AND username = '${username}'`,
+        `SELECT * FROM portofolio where id='${id}'`,
         (err, res) => {
           if (!err) {
             resolve(res);
@@ -36,11 +26,12 @@ module.exports = {
         }
       );
     }),
-  createSkill: (data) =>
+  createPortfolio: (data) =>
     new Promise((resolve, reject) => {
-      connection.query(`INSERT INTO skill SET ?`, data, (err, res) => {
+      connection.query(`INSERT INTO portofolio SET ?`, data, (err, res) => {
         if (!err) {
           const newResult = {
+            id: res.insertId,
             ...data,
           };
           resolve(newResult);
@@ -49,16 +40,16 @@ module.exports = {
         }
       });
     }),
-  updatedSkill: (id, data) =>
+  updatedPortfolio: (id, data) =>
     new Promise((resolve, reject) => {
       connection.query(
-        `update skill SET ? where id = '${id}'`,
+        `update portofolio SET ? where id = '${id}'`,
         data,
         (err, res) => {
           if (!err) {
             const newResult = {
-              ...data,
               id,
+              ...data,
             };
             resolve(newResult);
           } else {
@@ -67,14 +58,17 @@ module.exports = {
         }
       );
     }),
-  deletedSkill: (id) =>
+  deletedPortfolio: (id) =>
     new Promise((resolve, reject) => {
-      connection.query(`DELETE FROM skill where id = '${id}'`, (err, res) => {
-        if (!err) {
-          resolve(id);
-        } else {
-          reject(new Error(`SQL: ${err.sqlMessage}`));
+      connection.query(
+        `DELETE FROM portofolio where id = '${id}'`,
+        (err, res) => {
+          if (!err) {
+            resolve(id);
+          } else {
+            reject(new Error(`SQL: ${err.sqlMessage}`));
+          }
         }
-      });
+      );
     }),
 };

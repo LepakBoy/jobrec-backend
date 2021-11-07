@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "b2ab0926-3c4f-42be-a3ce-74f412930298",
-		"name": "jobrec",
+		"_postman_id": "689a9b5c-02d4-4925-97c3-c398f2fdda2a",
+		"name": "JOBRECT",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -18,17 +18,17 @@
 							"urlencoded": [
 								{
 									"key": "nohp",
-									"value": "55544adasd",
+									"value": "555443123adasd",
 									"type": "text"
 								},
 								{
 									"key": "username",
-									"value": "fi",
+									"value": "fixsf",
 									"type": "text"
 								},
 								{
 									"key": "email",
-									"value": "amdfikri35@gmail.com",
+									"value": "ezlife9909@gmail.com",
 									"type": "text"
 								},
 								{
@@ -44,39 +44,13 @@
 							]
 						},
 						"url": {
-							"raw": "{{deb}}/auth/register?nohp=08333",
+							"raw": "{{dev}}/auth/register",
 							"host": [
-								"{{deb}}"
+								"{{dev}}"
 							],
 							"path": [
 								"auth",
 								"register"
-							],
-							"query": [
-								{
-									"key": "username",
-									"value": "pekerjatiga",
-									"disabled": true
-								},
-								{
-									"key": "name",
-									"value": "pekerja tiga",
-									"disabled": true
-								},
-								{
-									"key": "password",
-									"value": "pekerjatiga",
-									"disabled": true
-								},
-								{
-									"key": "email",
-									"value": "pekerjatiga@mail.com",
-									"disabled": true
-								},
-								{
-									"key": "nohp",
-									"value": "08333"
-								}
 							]
 						}
 					},
@@ -110,6 +84,267 @@
 							"path": [
 								"auth.",
 								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "skill",
+			"item": [
+				{
+					"name": "Create Skill",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "ez",
+									"type": "text"
+								},
+								{
+									"key": "nama_skill",
+									"value": "Php",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{dev}}/skill",
+							"host": [
+								"{{dev}}"
+							],
+							"path": [
+								"skill"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read Skill By Username",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "ez",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{dev}}/skill",
+							"host": [
+								"{{dev}}"
+							],
+							"path": [
+								"skill"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Skill",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "ez",
+									"type": "text"
+								},
+								{
+									"key": "nama_skill",
+									"value": "JSsX",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{dev}}/skill/update/2",
+							"host": [
+								"{{dev}}"
+							],
+							"path": [
+								"skill",
+								"update",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Skill",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{dev}}/skill/delete/6",
+							"host": [
+								"{{dev}}"
+							],
+							"path": [
+								"skill",
+								"delete",
+								"6"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "portfolio",
+			"item": [
+				{
+					"name": "Create Portfolio",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "ez",
+									"type": "text"
+								},
+								{
+									"key": "nama_applikasi",
+									"value": " Masaki - Masak Online",
+									"type": "text"
+								},
+								{
+									"key": "link_repository",
+									"value": "https://github.com/ArkaWebClass/fw11-intermediateFrontend",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/SmourACE/Downloads/lock 1.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{dev}}/portofolio",
+							"host": [
+								"{{dev}}"
+							],
+							"path": [
+								"portofolio"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read Portfolio By Username",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "ez",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{dev}}/portofolio",
+							"host": [
+								"{{dev}}"
+							],
+							"path": [
+								"portofolio"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Portfolio",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "ez",
+									"type": "text"
+								},
+								{
+									"key": "nama_applikasi",
+									"value": "GojekTiz",
+									"type": "text"
+								},
+								{
+									"key": "link_repository",
+									"value": "https://github.com/ArkaWebClass/fw11-intermediateFrontend",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/SmourACE/Downloads/lock 1.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{dev}}/portofolio/update/20",
+							"host": [
+								"{{dev}}"
+							],
+							"path": [
+								"portofolio",
+								"update",
+								"20"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Portfolio",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{dev}}/portofolio/delete/21",
+							"host": [
+								"{{dev}}"
+							],
+							"path": [
+								"portofolio",
+								"delete",
+								"21"
 							]
 						}
 					},

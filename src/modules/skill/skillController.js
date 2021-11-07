@@ -1,11 +1,38 @@
 const skillModel = require("./skillModel");
 const authModel = require("../auth/authModel");
-const helperWrapper = require("../../helper/");
+const helperWrapper = require("../../helpers/wrapper");
 
 module.exports = {
-  getAllSkillByUserId: async (req, res) => {
+  getAllSkillByUsername: async (req, res) => {
     try {
-    } catch (error) {}
+      const { username } = req.body;
+      const isRegister = await authModel.getUserByUsername(username);
+      if (isRegister.length < 1) {
+        return helperWrapper.response(
+          res,
+          400,
+          `Username Belum Terdaftar`,
+          null
+        );
+      }
+      const result = await skillModel.getAllSkillByUsername(username);
+      if (result.length < 1) {
+        return helperWrapper.response(res, 400, `Skill Tidak Ditemukan`, null);
+      }
+      return helperWrapper.response(
+        res,
+        200,
+        `Skill Berhasil Didapatkan`,
+        result
+      );
+    } catch (error) {
+      return helperWrapper.response(
+        res,
+        400,
+        `bad request ${error.message}`,
+        null
+      );
+    }
   },
   createSkill: async (req, res) => {
     try {

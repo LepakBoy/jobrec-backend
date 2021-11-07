@@ -1,9 +1,9 @@
 const authModel = require("./authModel");
 const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
-const helperWrapper = require("../../helper/");
+const helperWrapper = require("../../helpers/wrapper");
 const bcrypt = require("bcrypt");
-const sendMail = require("../../helper/email");
+const sendMail = require("../../helpers/email");
 require("dotenv").config();
 
 module.exports = {
