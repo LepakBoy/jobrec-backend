@@ -15,6 +15,20 @@ module.exports = {
         }
       );
     }),
+  checkPerekrutData: (username, email, nohp) =>
+    new Promise((resolve, reject) => {
+      connection.query(
+        `SELECT * FROM perekrut WHERE email = '${email}'`,
+
+        (error, result) => {
+          if (!error) {
+            resolve(result);
+          } else {
+            reject(new Error(`SQL : ${error.sqlMessage}`));
+          }
+        }
+      );
+    }),
 
   register: (data) =>
     new Promise((resolve, reject) => {

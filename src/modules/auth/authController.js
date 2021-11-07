@@ -55,17 +55,17 @@ module.exports = {
       const setDataEmail = {
         to: email,
         subject: "Email Verifcation",
-        template: "email-verification",
+        template: "register",
         data: {
           name: setData.name,
           email: email,
-          link: `${process.env.APP_URL}auth/activate-account/${setData.username}`,
+          link: `${process.env.APP_URL}/auth/activate-account/${setData.username}`,
         },
         attachment: [],
       };
 
       // disable while development
-      // await sendMail.verificationAccount(setDataEmail);
+      await sendMail.verificationAccount(setDataEmail);
 
       const result = await authModel.register(setData);
       return helperWrapper.response(res, 200, `get data`, result);
@@ -104,7 +104,7 @@ module.exports = {
       );
     }
   },
-  login: async (req, res) => {
+  loginPekerja: async (req, res) => {
     try {
       const { email, password } = req.body;
       const checkUserData = await authModel.checkUserData(null, email);
@@ -135,6 +135,63 @@ module.exports = {
       //declare payload
       const payload = checkUserData[0];
       delete payload.password;
+      payload.role = "pekerja";
+
+      //generate token
+      const token = jwt.sign({ ...payload }, process.env.JWT_SECRETE_KEY, {
+        expiresIn: "1h",
+      });
+
+      //generate refresh token
+      const refreshToken = jwt.sign(
+        { ...payload },
+        process.env.JWT_SECRETE_KEY,
+        { expiresIn: "24h" }
+      );
+
+      return helperWrapper.response(res, 200, `success login`, {
+        username: payload.username,
+        token,
+        refreshToken,
+      });
+    } catch (error) {
+      return helperWrapper.response(
+        res,
+        400,
+        `bad request ${error.message}`,
+        null
+      );
+    }
+  },
+  loginPerekrut: async (req, res) => {
+    try {
+      const { email, password } = req.body;
+      const checkPerekrutData = await authModel.checkPerekrutData(null, email);
+
+      if (checkPerekrutData.length < 1) {
+        return helperWrapper.response(res, 400, `email not registred`, null);
+      }
+      if (checkPerekrutData[0].accountStatus !== "active") {
+        return helperWrapper.response(
+          res,
+          400,
+          `check your email for account acticvation`,
+          null
+        );
+      }
+      //compare password
+      const validPass = await bcrypt.compare(
+        password,
+        checkPerekrutData[0].password
+      );
+      if (!validPass) {
+        return helperWrapper.response(res, 400, `wrong password`);
+      }
+
+      //declare payload
+      const payload = checkPerekrutData[0];
+      delete payload.password;
+      payload.role = "pekerja";
 
       //generate token
       const token = jwt.sign({ ...payload }, process.env.JWT_SECRETE_KEY, {
@@ -176,6 +233,46 @@ module.exports = {
         res,
         400,
         `bad request ${error.message}`,
+        null
+      );
+    }
+  },
+  refreshToken: async (req, res) => {
+    try {
+      console.log(req.body);
+      const { refreshToken } = req.body;
+      // redis.get(`refreshToken:${refreshToken}`, (error, result) => {
+      //   if (!error && result !== null) {
+      //     return helperWrapper.response(
+      //       res,
+      //       403,
+      //       "Your refresh token cannot be use"
+      //     );
+      //   }
+      //   jwt.verify(refreshToken, process.env.JWT_PRIVATE, (error, result) => {
+      //     if (error) {
+      //       return helperWrapper.response(res, 403, error.message);
+      //     }
+      //     delete result.iat;
+      //     delete result.exp;
+      //     const token = jwt.sign(result, process.env.JWT_PRIVATE, {
+      //       expiresIn: "1h",
+      //     });
+      //     const newRefreshToken = jwt.sign(result, process.env.JWT_PRIVATE, {
+      //       expiresIn: "24h",
+      //     });
+      //     return helperWrapper.response(res, 200, "Success Refresh Token !", {
+      //       id: result.id,
+      //       token,
+      //       refreshToken: newRefreshToken,
+      //     });
+      //   });
+      // });
+    } catch (error) {
+      return helperWrapper.response(
+        res,
+        400,
+        `Bad request (${error.message})`,
         null
       );
     }
