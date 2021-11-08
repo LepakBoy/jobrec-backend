@@ -85,6 +85,58 @@ module.exports = {
       );
     }
   },
+  updatePassword: async (req, res) => {
+    try {
+      const { username } = req.params;
+      const { password, confirmPassword } = req.body;
+      console.log(username, password, confirmPassword);
+      const checkUsername = await workerModel.getWorkerByUsername(username);
+      // if (checkUsername.length < 1) {
+      //   return helperWrapper.response(
+      //     res,
+      //     404,
+      //     `Worker by Id ${Username} Not FOund`,
+      //     null
+      //   );
+      // }
+      // const {
+      //   jobdesk,
+      //   domisili,
+      //   url_ig,
+      //   url_gitlab,
+      //   url_github,
+      //   deskripsi,
+      //   avatar,
+      // } = req.body;
+      // const setData = {
+      //   jobdesk,
+      //   domisili,
+      //   url_ig,
+      //   url_gitlab,
+      //   url_github,
+      //   deskripsi,
+      //   avatar: req.file ? req.file.filename : null,
+      //   updatedAt: new Date(Date.now()),
+      // };
+      // for (const data in setData) {
+      //   if (!setData[data]) {
+      //     delete setData[data];
+      //   }
+      // }
+      // if (req.file && checkUsername[0].avatar) {
+      //   deleteFile(`public/uploads/avatar/${checkUsername[0].avatar}`);
+      // }
+      // const result = await workerModel.updatePersonalData(setData, username);
+      // return helperWrapper.response(res, 200, "Sucess update data", result);
+    } catch (error) {
+      return helperWrapper.response(
+        res,
+        400,
+        `Bad request (${error.message}`,
+        null
+      );
+    }
+  },
   postWorkerExp: async (req, res) => {
     try {
       const {
