@@ -55,17 +55,17 @@ module.exports = {
       const setDataEmail = {
         to: email,
         subject: "Email Verifcation",
-        template: "email-verification",
+        template: "register",
         data: {
           name: setData.name,
           email: email,
-          link: `${process.env.APP_URL}auth/activate-account/${setData.username}`,
+          link: `${process.env.APP_URL}/auth/activate-account/${setData.username}`,
         },
         attachment: [],
       };
 
       // disable while development
-      // await sendMail.verificationAccount(setDataEmail);
+      await sendMail.verificationAccount(setDataEmail);
 
       const result = await authModel.register(setData);
       return helperWrapper.response(res, 200, `get data`, result);
@@ -78,12 +78,121 @@ module.exports = {
       );
     }
   },
-  accountActivation: async (req, res) => {
+
+  registerRecruiter: async (req, res) => {
     try {
-      const { username } = req.params;
+      const { name, companyName, filed, email, password, nohp } = req.body;
+
+      const hash = await bcrypt.hash(password, 10);
+
+      //checking data from worker and recruiter
+      const checkRecruiterData = await authModel.checkRecruiterData(
+        email,
+        nohp
+      );
+      const checkUserData = await authModel.checkUserData(null, email, nohp);
+
+      const setData = {
+        id: uuidv4(),
+        nama_lengkap: name,
+        nama_perusahaan: companyName,
+        bidang: filed,
+        email,
+        password: hash,
+        nohp,
+      };
+
+      //validation data worker and recrutier
+      if (checkRecruiterData.length > 0) {
+        if (checkRecruiterData[0].email === email) {
+          return helperWrapper.response(
+            res,
+            400,
+            `email udh dipake perekrut`,
+            null
+          );
+        }
+        if (checkRecruiterData[0].nohp === nohp) {
+          return helperWrapper.response(
+            res,
+            400,
+            `hp udh dipake perekrut`,
+            null
+          );
+        }
+      }
+      if (checkUserData.length > 0) {
+        if (checkUserData[0].email === email) {
+          return helperWrapper.response(
+            res,
+            400,
+            `email udh dipake user`,
+            null
+          );
+        }
+        if (checkUserData[0].nohp === nohp) {
+          return helperWrapper.response(res, 400, `hp udh dipake user`, null);
+        }
+      }
+
+      const setDataEmail = {
+        to: email,
+        subject: "Email Verifcation",
+        template: "email-verification",
+        data: {
+          name: setData.nama_lengkap,
+          email: email,
+          link: `${process.env.APP_URL}/auth/activate-account-recruiter/${setData.id}`,
+        },
+        attachment: [],
+      };
+
+      // disable while development
+      // await sendMail.verificationAccount(setDataEmail);
+
+      const result = await authModel.registerRecruiter(setData);
+      return helperWrapper.response(res, 200, `get data`, result);
+    } catch (error) {
+      return helperWrapper.response(
+        res,
+        400,
+        `bad request ${error.message}`,
+        null
+      );
+    }
+  },
+  accountRecruiterActivation: async (req, res) => {
+    try {
+      const { id } = req.params;
       const status = "active";
       const setData = {
-        username,
+        id,
+        status,
+      };
+
+      const result = await authModel.activationRecruiterAccount(setData);
+
+      return helperWrapper.response(
+        res,
+        200,
+        `success activate account`,
+        result
+      );
+    } catch (error) {
+      return helperWrapper.response(
+        res,
+        400,
+        `bad request ${error.message}`,
+        null
+      );
+    }
+  },
+  accountActivation: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const status = "active";
+      const setData = {
+        id,
         status,
       };
 
@@ -104,7 +213,7 @@ module.exports = {
       );
     }
   },
-  login: async (req, res) => {
+  loginPekerja: async (req, res) => {
     try {
       const { email, password } = req.body;
       const checkUserData = await authModel.checkUserData(null, email);
@@ -114,14 +223,15 @@ module.exports = {
       }
 
       //checking accountStatus isActive ?
-      if (checkUserData[0].accountStatus !== "active") {
-        return helperWrapper.response(
-          res,
-          400,
-          `check your email for account acticvation`,
-          null
-        );
-      }
+      //disabled while develompent
+      // if (checkUserData[0].accountStatus !== "active") {
+      //   return helperWrapper.response(
+      //     res,
+      //     400,
+      //     `check your email for account acticvation`,
+      //     null
+      //   );
+      // }
 
       //compare password
       const validPass = await bcrypt.compare(
@@ -135,6 +245,7 @@ module.exports = {
       //declare payload
       const payload = checkUserData[0];
       delete payload.password;
+      payload.role = "pekerja";
 
       //generate token
       const token = jwt.sign({ ...payload }, process.env.JWT_SECRETE_KEY, {
@@ -162,6 +273,122 @@ module.exports = {
       );
     }
   },
+  loginPerekrut: async (req, res) => {
+    try {
+      const { email, password } = req.body;
+      const checkPerekrutData = await authModel.checkPerekrutData(null, email);
+
+      if (checkPerekrutData.length < 1) {
+        return helperWrapper.response(res, 400, `email not registred`, null);
+      }
+      if (checkPerekrutData[0].accountStatus !== "active") {
+        return helperWrapper.response(
+          res,
+          400,
+          `check your email for account acticvation`,
+          null
+        );
+      }
+      //compare password
+      const validPass = await bcrypt.compare(
+        password,
+        checkPerekrutData[0].password
+      );
+      if (!validPass) {
+        return helperWrapper.response(res, 400, `wrong password`);
+      }
+
+      //declare payload
+      const payload = checkPerekrutData[0];
+      delete payload.password;
+      payload.role = "pekerja";
+
+      //generate token
+      const token = jwt.sign({ ...payload }, process.env.JWT_SECRETE_KEY, {
+        expiresIn: "1h",
+      });
+
+      //generate refresh token
+      const refreshToken = jwt.sign(
+        { ...payload },
+        process.env.JWT_SECRETE_KEY,
+        { expiresIn: "24h" }
+      );
+
+      return helperWrapper.response(res, 200, `success login`, {
+        username: payload.username,
+        token,
+        refreshToken,
+      });
+    } catch (error) {
+      return helperWrapper.response(
+        res,
+        400,
+        `bad request ${error.message}`,
+        null
+      );
+    }
+  },
+  loginRecruiter: async (req, res) => {
+    try {
+      const { email, password } = req.body;
+      const checkRecruiterData = await authModel.checkRecruiterData(email);
+
+      console.log(checkRecruiterData);
+      if (checkRecruiterData.length < 1) {
+        return helperWrapper.response(res, 400, `email not registred`, null);
+      }
+
+      //checking accountStatus isActive ?
+      // disable while development
+      // if (checkRecruiterData[0].accountStatus !== "active") {
+      //   return helperWrapper.response(
+      //     res,
+      //     400,
+      //     `check your email for account acticvation`,
+      //     null
+      //   );
+      // }
+
+      //compare password
+      const validPass = await bcrypt.compare(
+        password,
+        checkRecruiterData[0].password
+      );
+      if (!validPass) {
+        return helperWrapper.response(res, 400, `wrong password`);
+      }
+
+      //declare payload
+      const payload = checkRecruiterData[0];
+      delete payload.password;
+
+      //generate token
+      const token = jwt.sign({ ...payload }, process.env.JWT_SECRETE_KEY, {
+        expiresIn: "1h",
+      });
+
+      //generate refresh token
+      const refreshToken = jwt.sign(
+        { ...payload },
+        process.env.JWT_SECRETE_KEY,
+        { expiresIn: "24h" }
+      );
+
+      return helperWrapper.response(res, 200, `success login`, {
+        id: payload.id,
+        token,
+        refreshToken,
+      });
+    } catch (error) {
+      return helperWrapper.response(
+        res,
+        400,
+        `bad request ${error.message}`,
+        null
+      );
+    }
+  },
   logout: async (req, res) => {
     try {
       let token = req.headers.authorization;
@@ -176,6 +403,46 @@ module.exports = {
         res,
         400,
         `bad request ${error.message}`,
+        null
+      );
+    }
+  },
+  refreshToken: async (req, res) => {
+    try {
+      console.log(req.body);
+      const { refreshToken } = req.body;
+      // redis.get(`refreshToken:${refreshToken}`, (error, result) => {
+      //   if (!error && result !== null) {
+      //     return helperWrapper.response(
+      //       res,
+      //       403,
+      //       "Your refresh token cannot be use"
+      //     );
+      //   }
+      //   jwt.verify(refreshToken, process.env.JWT_PRIVATE, (error, result) => {
+      //     if (error) {
+      //       return helperWrapper.response(res, 403, error.message);
+      //     }
+      //     delete result.iat;
+      //     delete result.exp;
+      //     const token = jwt.sign(result, process.env.JWT_PRIVATE, {
+      //       expiresIn: "1h",
+      //     });
+      //     const newRefreshToken = jwt.sign(result, process.env.JWT_PRIVATE, {
+      //       expiresIn: "24h",
+      //     });
+      //     return helperWrapper.response(res, 200, "Success Refresh Token !", {
+      //       id: result.id,
+      //       token,
+      //       refreshToken: newRefreshToken,
+      //     });
+      //   });
+      // });
+    } catch (error) {
+      return helperWrapper.response(
+        res,
+        400,
+        `Bad request (${error.message})`,
         null
       );
     }
