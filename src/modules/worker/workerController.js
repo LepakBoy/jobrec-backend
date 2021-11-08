@@ -85,10 +85,6 @@ module.exports = {
       );
     }
   },
-<<<<<<< HEAD
-=======
-  // Pengalaman Kerja
->>>>>>> 76bd6ff5c38a6efbbd9553dd34163e18bb2e3035
   postWorkerExp: async (req, res) => {
     try {
       const {
