@@ -1,6 +1,7 @@
 const recruiterModel = require("./recruiterModel");
 const authModel = require("../auth/authModel");
 const helperWrapper = require("../../helpers/wrapper");
+const deleteFile = require("../../helpers/delete");
 
 module.exports = {
   getPerusahaanById: async (req, res) => {
@@ -131,7 +132,25 @@ module.exports = {
   },
   updateImagePerusahaan : async(req, res)=> {
     try{
+      const {id} = req.decodeToken.id;
+      const checkId = await recruiterModel.getPerusahaanById(id);
 
+      if(checkId.length < 1 ){
+          return helperWrapper.response(res, 404, `data by id ${id} not found`, null);
+      }
+  
+      const avatar = req.file ? req.file.filename : null;
+      const setData = {
+        avatar, updatedAt: new Date(Date.now())
+      }
+ 
+    if(checkId[0].avatar && req.file){
+      deleteFile(`public/uploads/avatar/${checkUsername[0].avatar}`)
+    }
+
+      const result = recruiterModel.updateImagePerusahaan(setData, id)
+
+      return helperWrapper.response(res, 200, `success update data`, result);
     }catch(error){
       return helperWrapper.response(
       res,

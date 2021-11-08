@@ -33,4 +33,19 @@ module.exports = {
         }
       );
     }),
+    updateImagePerusahaan : (data, id)=> 
+    new Promise((resolve, reject) => {
+      connection.query("UPDATE perekrut SET avatar = ? updatedAt = ? WHERE id = ?", [data.avatar, data.updatedAt, id], (error, result) => {
+        if(!error){
+           const newResult = {
+            id,
+            ...data,
+          };
+
+          resolve(newResult);
+        }else{
+           reject(new Error(`SQL : (${error.sqlMessage})`));
+        }
+      })
+    })
 };
