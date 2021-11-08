@@ -1,8 +1,8 @@
 const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
-const helperWrapper = require("../../helper/");
+const helperWrapper = require("../../helpers/wrapper");
 const workerModel = require("./workerModel");
-const sendMail = require("../../helper/email");
+const sendMail = require("../../helpers/email");
 
 module.exports = {
   getWorkerByUsername: async (req, res) => {

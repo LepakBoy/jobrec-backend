@@ -18,6 +18,11 @@ module.exports = {
         nohp
       );
 
+      const checkRecruiterData = await authModel.checkRecruiterData(
+        email,
+        nohp
+      );
+
       const setData = {
         username,
         name,
@@ -26,29 +31,36 @@ module.exports = {
         nohp,
       };
 
+      //validation data worker and recrutier
+      if (checkRecruiterData.length > 0) {
+        if (checkRecruiterData[0].email === email) {
+          return helperWrapper.response(
+            res,
+            400,
+            `email udh dipake perekrut`,
+            null
+          );
+        }
+        if (checkRecruiterData[0].nohp === nohp) {
+          return helperWrapper.response(
+            res,
+            400,
+            `hp udh dipake perekrut`,
+            null
+          );
+        }
+      }
       if (checkUserData.length > 0) {
-        // console.log(checkUserData[0].username);
-        if (checkUserData[0].username === setData.username) {
+        if (checkUserData[0].email === email) {
           return helperWrapper.response(
             res,
             400,
-            `Username Telah Digunakan`,
+            `email udh dipake user`,
             null
           );
-        } else if (checkUserData[0].email === setData.email) {
-          return helperWrapper.response(
-            res,
-            400,
-            `Email Telah Digunakan`,
-            null
-          );
-        } else if (checkUserData[0].nohp === setData.nohp) {
-          return helperWrapper.response(
-            res,
-            400,
-            `Nomor Telefon Telah Digunakan`,
-            null
-          );
+        }
+        if (checkUserData[0].nohp === nohp) {
+          return helperWrapper.response(res, 400, `hp udh dipake user`, null);
         }
       }
 
@@ -245,6 +257,7 @@ module.exports = {
       //declare payload
       const payload = checkUserData[0];
       delete payload.password;
+      payload.role = "worker";
 
       //generate token
       const token = jwt.sign({ ...payload }, process.env.JWT_SECRETE_KEY, {
@@ -305,6 +318,7 @@ module.exports = {
       //declare payload
       const payload = checkRecruiterData[0];
       delete payload.password;
+      payload.role = "reqcuiter";
 
       //generate token
       const token = jwt.sign({ ...payload }, process.env.JWT_SECRETE_KEY, {
