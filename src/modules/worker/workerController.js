@@ -3,8 +3,10 @@ const jwt = require("jsonwebtoken");
 const helperWrapper = require("../../helpers/wrapper");
 const workerModel = require("./workerModel");
 const sendMail = require("../../helpers/email");
+const deleteFile = require("../../helpers/delete");
 
 module.exports = {
+  // Worker personal
   getWorkerByUsername: async (req, res) => {
     try {
       const { username } = req.params;
@@ -36,8 +38,8 @@ module.exports = {
   updatePersonalData: async (req, res) => {
     try {
       const { username } = req.params;
-      const checkId = await workerModel.getWorkerByUsername(username);
-      if (checkId.length < 1) {
+      const checkUsername = await workerModel.getWorkerByUsername(username);
+      if (checkUsername.length < 1) {
         return helperWrapper.response(
           res,
           404,
@@ -45,8 +47,15 @@ module.exports = {
           null
         );
       }
-      const { jobdesk, domisili, url_ig, url_gitlab, url_github, deskripsi } =
-        req.body;
+      const {
+        jobdesk,
+        domisili,
+        url_ig,
+        url_gitlab,
+        url_github,
+        deskripsi,
+        avatar,
+      } = req.body;
       const setData = {
         jobdesk,
         domisili,
@@ -54,12 +63,16 @@ module.exports = {
         url_gitlab,
         url_github,
         deskripsi,
+        avatar: req.file ? req.file.filename : null,
         updatedAt: new Date(Date.now()),
       };
       for (const data in setData) {
         if (!setData[data]) {
           delete setData[data];
         }
+      }
+      if (req.file && checkUsername[0].avatar) {
+        deleteFile(`public/uploads/avatar/${checkUsername[0].avatar}`);
       }
       const result = await workerModel.updatePersonalData(setData, username);
       return helperWrapper.response(res, 200, "Sucess update data", result);
@@ -72,6 +85,10 @@ module.exports = {
       );
     }
   },
+<<<<<<< HEAD
+=======
+  // Pengalaman Kerja
+>>>>>>> 76bd6ff5c38a6efbbd9553dd34163e18bb2e3035
   postWorkerExp: async (req, res) => {
     try {
       const {
@@ -120,6 +137,100 @@ module.exports = {
           result
         );
       }
+    } catch (error) {
+      return helperWrapper.response(
+        res,
+        400,
+        `Bad request (${error.message}`,
+        null
+      );
+    }
+  },
+  getWorkerExpById: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const result = await workerModel.getWorkerExpById(id);
+      if (result.length < 1) {
+        return helperWrapper.response(
+          res,
+          404,
+          `Worker Experience by Id ${id} Not FOund`,
+          null
+        );
+      } else {
+        return helperWrapper.response(
+          res,
+          200,
+          "Sukses get worker Experience by Id",
+          result
+        );
+      }
+    } catch (error) {
+      return helperWrapper.response(
+        res,
+        400,
+        `Bad request (${error.message}`,
+        null
+      );
+    }
+  },
+  deletedWorkerExp: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const checkId = await workerModel.getWorkerExpById(id);
+      if (checkId.length < 1) {
+        return helperWrapper.response(
+          res,
+          200,
+          `Pengalaman id: ${id} Tidak Ditemukan`,
+          null
+        );
+      }
+      const result = await workerModel.deletedWorkerExp(id);
+      return helperWrapper.response(
+        res,
+        200,
+        `Succes Deleted Pengalaman Username: ${id}`,
+        result
+      );
+    } catch (error) {
+      return helperWrapper.response(
+        res,
+        400,
+        `bad Request : ${error.message}`,
+        null
+      );
+    }
+  },
+  updateWorkerExp: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const checkId = await workerModel.getWorkerExpById;
+      if (checkId.length < 1) {
+        return helperWrapper.response(
+          res,
+          404,
+          `Worker by Id ${id} Not FOund`,
+          null
+        );
+      }
+      const { nama_perusahaan, posisi, tgl_masuk, tgl_keluar, deskripsi } =
+        req.body;
+      const setData = {
+        nama_perusahaan,
+        posisi,
+        tgl_masuk,
+        tgl_keluar,
+        deskripsi,
+        updatedAt: new Date(Date.now()),
+      };
+      for (const data in setData) {
+        if (!setData[data]) {
+          delete setData[data];
+        }
+      }
+      const result = await workerModel.updateWorkerExp(id);
+      return helperWrapper.response(res, 200, "Sucess update data", result);
     } catch (error) {
       return helperWrapper.response(
         res,

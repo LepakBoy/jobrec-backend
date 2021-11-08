@@ -102,4 +102,22 @@ module.exports = {
         }
       );
     }),
+  updatePasswordWorker: (data, username) =>
+    new Promise((resolve, reject) => {
+      connection.query(
+        "UPDATE pekerja SET ? WHERE username = ?",
+        [data, username],
+        (error, result) => {
+          if (!error) {
+            const newResult = {
+              id,
+              ...data,
+            };
+            resolve(newResult);
+          } else {
+            reject(new Error(`SQL : ${error.sqlMessage}`));
+          }
+        }
+      );
+    }),
 };
