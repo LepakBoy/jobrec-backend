@@ -4,8 +4,7 @@
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const helperWrapper = require("../helpers/wrapper");
-
-// const redis = require("../config/redis");
+const redis = require("../config/redis");
 
 module.exports = {
   authentication: (req, res, next) => {
@@ -15,15 +14,15 @@ module.exports = {
       return helperWrapper.response(res, 403, "Please Login First");
     }
     token = token.split(" ")[1];
-    // redis.get(`accessToken:${token}`, (error, result) => {
-    //   if (!error && result !== null) {
-    //     return helperWrapper.response(
-    //       res,
-    //       403,
-    //       "Your token is destroyed please login again"
-    //     );
-    //   }
-    // });
+    redis.get(`accessToken:${token}`, (error, result) => {
+      if (!error && result !== null) {
+        return helperWrapper.response(
+          res,
+          403,
+          "Your token is destroyed please login again"
+        );
+      }
+    });
     jwt.verify(token, process.env.JWT_SECRETE_KEY, (error, result) => {
       if (error) {
         return helperWrapper.response(res, 403, error.message);

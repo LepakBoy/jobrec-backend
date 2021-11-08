@@ -341,8 +341,7 @@ module.exports = {
       let token = req.headers.authorization;
 
       token = token.split(" ")[1];
-
-      //redis ================================================
+      redis.setex(`accessToken:${token}`, 3600 * 24, token);
 
       return helperWrapper.response(res, 200, `success logout`, null);
     } catch (error) {
@@ -357,33 +356,33 @@ module.exports = {
   refreshToken: async (req, res) => {
     try {
       const { refreshToken } = req.body;
-      // redis.get(`refreshToken:${refreshToken}`, (error, result) => {
-      //   if (!error && result !== null) {
-      //     return helperWrapper.response(
-      //       res,
-      //       403,
-      //       "Your refresh token cannot be use"
-      //     );
-      //   }
-      //   jwt.verify(refreshToken, process.env.JWT_PRIVATE, (error, result) => {
-      //     if (error) {
-      //       return helperWrapper.response(res, 403, error.message);
-      //     }
-      //     delete result.iat;
-      //     delete result.exp;
-      //     const token = jwt.sign(result, process.env.JWT_PRIVATE, {
-      //       expiresIn: "1h",
-      //     });
-      //     const newRefreshToken = jwt.sign(result, process.env.JWT_PRIVATE, {
-      //       expiresIn: "24h",
-      //     });
-      //     return helperWrapper.response(res, 200, "Success Refresh Token !", {
-      //       id: result.id,
-      //       token,
-      //       refreshToken: newRefreshToken,
-      //     });
-      //   });
-      // });
+      redis.get(`refreshToken:${refreshToken}`, (error, result) => {
+        if (!error && result !== null) {
+          return helperWrapper.response(
+            res,
+            403,
+            "Your refresh token cannot be use"
+          );
+        }
+        jwt.verify(refreshToken, process.env.JWT_PRIVATE, (error, result) => {
+          if (error) {
+            return helperWrapper.response(res, 403, error.message);
+          }
+          delete result.iat;
+          delete result.exp;
+          const token = jwt.sign(result, process.env.JWT_PRIVATE, {
+            expiresIn: "1h",
+          });
+          const newRefreshToken = jwt.sign(result, process.env.JWT_PRIVATE, {
+            expiresIn: "24h",
+          });
+          return helperWrapper.response(res, 200, "Success Refresh Token !", {
+            id: result.id,
+            token,
+            refreshToken: newRefreshToken,
+          });
+        });
+      });
     } catch (error) {
       return helperWrapper.response(
         res,
@@ -456,7 +455,6 @@ module.exports = {
       if (password !== confirmPassword) {
         return helperWrapper.response(res, 400, `Password Tidak Sama`, null);
       }
-      console.log(email, tipe, password, confirmPassword);
       if (tipe == "worker") {
         userData = await authModel.checkUserData(null, email);
         if (userData.length < 1) {

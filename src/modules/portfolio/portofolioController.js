@@ -2,6 +2,7 @@ const portofolioModel = require("./portofolioModel");
 const authModel = require("../auth/authModel");
 const helperWrapper = require("../../helpers/wrapper");
 const deleteFile = require("../../helpers/delete");
+const redis = require("../../config/redis");
 
 module.exports = {
   getPortofolioByUsername: async (req, res) => {
@@ -25,6 +26,7 @@ module.exports = {
           null
         );
       }
+      redis.setex(`getPortofolio:${username}`, 3600, JSON.stringify(result));
       return helperWrapper.response(
         res,
         200,
