@@ -35,6 +35,13 @@ module.exports = {
     let token = req.params.username;
     jwt.verify(token, process.env.JWT_SECRETE_KEY, (error, result) => {
       if (error) {
+        if (error.message == "jwt expired") {
+          return helperWrapper.response(
+            res,
+            403,
+            "Token JWT Sudah Telat, Silahkan Kirim Ulang"
+          );
+        }
         return helperWrapper.response(res, 403, error.message);
       }
       req.decodeToken = result;

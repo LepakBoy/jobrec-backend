@@ -8,7 +8,7 @@ module.exports = {
     try {
       const { id } = req.params;
 
-      result = await recruiterModel.getPerusahaanById(id);
+      const checkId = await recruiterModel.getPerusahaanById(id);
 
       if (checkId.length < 1) {
         return helperWrapper.response(
@@ -19,7 +19,7 @@ module.exports = {
         );
       }
 
-      return helperWrapper.response(res, 200, `success create data`, result);
+      return helperWrapper.response(res, 200, `success create data`, checkId);
     } catch (error) {
       return helperWrapper.response(
         res,
@@ -130,34 +130,41 @@ module.exports = {
       null
     );
   },
-  updateImagePerusahaan : async(req, res)=> {
-    try{
-      const {id} = req.decodeToken.id;
+  updateImagePerusahaan: async (req, res) => {
+    try {
+      const id = req.decodeToken.id;
+
       const checkId = await recruiterModel.getPerusahaanById(id);
 
-      if(checkId.length < 1 ){
-          return helperWrapper.response(res, 404, `data by id ${id} not found`, null);
+      if (checkId.length < 1) {
+        return helperWrapper.response(
+          res,
+          404,
+          `data by id ${id} not found`,
+          null
+        );
       }
-  
+
       const avatar = req.file ? req.file.filename : null;
       const setData = {
-        avatar, updatedAt: new Date(Date.now())
-      }
- 
-    if(checkId[0].avatar && req.file){
-      deleteFile(`public/uploads/avatar/${checkUsername[0].avatar}`)
-    }
+        avatar,
+        updatedAt: new Date(Date.now()),
+      };
 
-      const result = recruiterModel.updateImagePerusahaan(setData, id)
+      if (checkId[0].avatar && req.file) {
+        deleteFile(`public/uploads/recruiter/${checkId[0].avatar}`);
+      }
+
+      const result = recruiterModel.updateImagePerusahaan(setData, id);
 
       return helperWrapper.response(res, 200, `success update data`, result);
-    }catch(error){
+    } catch (error) {
       return helperWrapper.response(
-      res,
-      400,
-      `bad request ${error.message}`,
-      null
-    );
+        res,
+        400,
+        `bad request ${error.message}`,
+        null
+      );
     }
-  }
+  },
 };

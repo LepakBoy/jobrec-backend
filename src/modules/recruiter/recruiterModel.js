@@ -33,19 +33,36 @@ module.exports = {
         }
       );
     }),
-    updateImagePerusahaan : (data, id)=> 
+  updateImagePerusahaan: (data, id) =>
     new Promise((resolve, reject) => {
-      connection.query("UPDATE perekrut SET avatar = ? updatedAt = ? WHERE id = ?", [data.avatar, data.updatedAt, id], (error, result) => {
-        if(!error){
-           const newResult = {
-            id,
-            ...data,
-          };
+      const query = connection.query(
+        "UPDATE perekrut SET ? WHERE id = ?",
+        [data, id],
+        (error, result) => {
+          if (!error) {
+            const newResult = {
+              id,
+              ...data,
+            };
 
-          resolve(newResult);
-        }else{
-           reject(new Error(`SQL : (${error.sqlMessage})`));
+            resolve(newResult);
+          } else {
+            reject(new Error(`SQL : (${error.sqlMessage})`));
+          }
         }
-      })
-    })
+      );
+    }),
+  updateWorkerPasswordByEmail: (password, email) =>
+    new Promise((resolve, reject) => {
+      connection.query(
+        `UPDATE pekerja SET password ='${password}' WHERE email = '${email}'`,
+        (error, result) => {
+          if (!error) {
+            resolve(result);
+          } else {
+            reject(new Error(`SQL : ${error.sqlMessage}`));
+          }
+        }
+      );
+    }),
 };
