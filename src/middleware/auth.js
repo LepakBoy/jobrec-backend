@@ -4,6 +4,7 @@
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const helperWrapper = require("../helpers/wrapper");
+
 // const redis = require("../config/redis");
 
 module.exports = {
@@ -31,16 +32,14 @@ module.exports = {
       return next();
     });
   },
-  isAdmin: (req, res, next) => {
-    const token = req.decodeToken;
-    console.log(token);
-    // if (token.role !== "admin") {
-    //   return helperWrapper.response(
-    //     res,
-    //     403,
-    //     "You Dont Have Access To This Page"
-    //   );
-    // }
-    // return next();
+  isForgotnRegister: (req, res, next) => {
+    let token = req.params.username;
+    jwt.verify(token, process.env.JWT_SECRETE_KEY, (error, result) => {
+      if (error) {
+        return helperWrapper.response(res, 403, error.message);
+      }
+      req.decodeToken = result;
+      return next();
+    });
   },
 };

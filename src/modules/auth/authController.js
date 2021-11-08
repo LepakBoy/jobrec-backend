@@ -1,9 +1,9 @@
-const authModel = require("./authModel");
-const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
-const helperWrapper = require("../../helpers/wrapper");
+const { v4: uuidv4 } = require("uuid");
+const authModel = require("./authModel");
 const bcrypt = require("bcrypt");
 const sendMail = require("../../helpers/email");
+const helperWrapper = require("../../helpers/wrapper");
 require("dotenv").config();
 
 module.exports = {
@@ -26,40 +26,46 @@ module.exports = {
         nohp,
       };
 
-      if (checkUserData.length > 0) {
-        // console.log(checkUserData[0].username);
-        if (checkUserData[0].username === setData.username) {
-          return helperWrapper.response(
-            res,
-            400,
-            `Username Telah Digunakan`,
-            null
-          );
-        } else if (checkUserData[0].email === setData.email) {
-          return helperWrapper.response(
-            res,
-            400,
-            `Email Telah Digunakan`,
-            null
-          );
-        } else if (checkUserData[0].nohp === setData.nohp) {
-          return helperWrapper.response(
-            res,
-            400,
-            `Nomor Telefon Telah Digunakan`,
-            null
-          );
+      // if (checkUserData.length > 0) {
+      //   // console.log(checkUserData[0].username);
+      //   if (checkUserData[0].username === setData.username) {
+      //     return helperWrapper.response(
+      //       res,
+      //       400,
+      //       `Username Telah Digunakan`,
+      //       null
+      //     );
+      //   } else if (checkUserData[0].email === setData.email) {
+      //     return helperWrapper.response(
+      //       res,
+      //       400,
+      //       `Email Telah Digunakan`,
+      //       null
+      //     );
+      //   } else if (checkUserData[0].nohp === setData.nohp) {
+      //     return helperWrapper.response(
+      //       res,
+      //       400,
+      //       `Nomor Telefon Telah Digunakan`,
+      //       null
+      //     );
+      //   }
+      // }
+      const token = jwt.sign(
+        { data: setData.username },
+        process.env.JWT_SECRETE_KEY,
+        {
+          expiresIn: "30d",
         }
-      }
-
+      );
       const setDataEmail = {
         to: email,
-        subject: "Email Verifcation",
+        subject: "Confirm Your Email To Jobrect Account",
         template: "register",
         data: {
           name: setData.name,
           email: email,
-          link: `${process.env.APP_URL}/auth/activate-account/${setData.username}`,
+          link: `${process.env.APP_URL}/auth/activate-account/${token}`,
         },
         attachment: [],
       };
@@ -103,42 +109,42 @@ module.exports = {
       };
 
       //validation data worker and recrutier
-      if (checkRecruiterData.length > 0) {
-        if (checkRecruiterData[0].email === email) {
-          return helperWrapper.response(
-            res,
-            400,
-            `email udh dipake perekrut`,
-            null
-          );
-        }
-        if (checkRecruiterData[0].nohp === nohp) {
-          return helperWrapper.response(
-            res,
-            400,
-            `hp udh dipake perekrut`,
-            null
-          );
-        }
-      }
-      if (checkUserData.length > 0) {
-        if (checkUserData[0].email === email) {
-          return helperWrapper.response(
-            res,
-            400,
-            `email udh dipake user`,
-            null
-          );
-        }
-        if (checkUserData[0].nohp === nohp) {
-          return helperWrapper.response(res, 400, `hp udh dipake user`, null);
-        }
-      }
+      // if (checkRecruiterData.length > 0) {
+      //   if (checkRecruiterData[0].email === email) {
+      //     return helperWrapper.response(
+      //       res,
+      //       400,
+      //       `Email Sudah Terdaftar di akun lain`,
+      //       null
+      //     );
+      //   }
+      //   if (checkRecruiterData[0].nohp === nohp) {
+      //     return helperWrapper.response(
+      //       res,
+      //       400,
+      //       `Nomor Telfon Telah Terdaftar di akun lain`,
+      //       null
+      //     );
+      //   }
+      // }
+      // if (checkUserData.length > 0) {
+      //   if (checkUserData[0].email === email) {
+      //     return helperWrapper.response(
+      //       res,
+      //       400,
+      //       `Email sudah terdaftar di akun lain`,
+      //       null
+      //     );
+      //   }
+      //   if (checkUserData[0].nohp === nohp) {
+      //     return helperWrapper.response(res, 400, `hp udh dipake user`, null);
+      //   }
+      // }
 
       const setDataEmail = {
         to: email,
-        subject: "Email Verifcation",
-        template: "email-verification",
+        subject: "Confirm Your Email To Jobrect Account",
+        template: "register",
         data: {
           name: setData.nama_lengkap,
           email: email,
@@ -148,7 +154,7 @@ module.exports = {
       };
 
       // disable while development
-      // await sendMail.verificationAccount(setDataEmail);
+      await sendMail.verificationAccount(setDataEmail);
 
       const result = await authModel.registerRecruiter(setData);
       return helperWrapper.response(res, 200, `get data`, result);
@@ -189,15 +195,11 @@ module.exports = {
   },
   accountActivation: async (req, res) => {
     try {
-      const { id } = req.params;
-      const status = "active";
       const setData = {
-        id,
-        status,
+        username: req.decodeToken.data,
+        status: "active",
       };
-
       const result = await authModel.activationAccount(setData);
-
       return helperWrapper.response(
         res,
         200,
@@ -213,7 +215,7 @@ module.exports = {
       );
     }
   },
-  loginPekerja: async (req, res) => {
+  loginWorker: async (req, res) => {
     try {
       const { email, password } = req.body;
       const checkUserData = await authModel.checkUserData(null, email);
@@ -245,7 +247,7 @@ module.exports = {
       //declare payload
       const payload = checkUserData[0];
       delete payload.password;
-      payload.role = "pekerja";
+      payload.role = "Worker";
 
       //generate token
       const token = jwt.sign({ ...payload }, process.env.JWT_SECRETE_KEY, {
@@ -273,68 +275,12 @@ module.exports = {
       );
     }
   },
-  loginPerekrut: async (req, res) => {
-    try {
-      const { email, password } = req.body;
-      const checkPerekrutData = await authModel.checkPerekrutData(null, email);
 
-      if (checkPerekrutData.length < 1) {
-        return helperWrapper.response(res, 400, `email not registred`, null);
-      }
-      if (checkPerekrutData[0].accountStatus !== "active") {
-        return helperWrapper.response(
-          res,
-          400,
-          `check your email for account acticvation`,
-          null
-        );
-      }
-      //compare password
-      const validPass = await bcrypt.compare(
-        password,
-        checkPerekrutData[0].password
-      );
-      if (!validPass) {
-        return helperWrapper.response(res, 400, `wrong password`);
-      }
-
-      //declare payload
-      const payload = checkPerekrutData[0];
-      delete payload.password;
-      payload.role = "pekerja";
-
-      //generate token
-      const token = jwt.sign({ ...payload }, process.env.JWT_SECRETE_KEY, {
-        expiresIn: "1h",
-      });
-
-      //generate refresh token
-      const refreshToken = jwt.sign(
-        { ...payload },
-        process.env.JWT_SECRETE_KEY,
-        { expiresIn: "24h" }
-      );
-
-      return helperWrapper.response(res, 200, `success login`, {
-        username: payload.username,
-        token,
-        refreshToken,
-      });
-    } catch (error) {
-      return helperWrapper.response(
-        res,
-        400,
-        `bad request ${error.message}`,
-        null
-      );
-    }
-  },
   loginRecruiter: async (req, res) => {
     try {
       const { email, password } = req.body;
       const checkRecruiterData = await authModel.checkRecruiterData(email);
 
-      console.log(checkRecruiterData);
       if (checkRecruiterData.length < 1) {
         return helperWrapper.response(res, 400, `email not registred`, null);
       }
@@ -362,6 +308,7 @@ module.exports = {
       //declare payload
       const payload = checkRecruiterData[0];
       delete payload.password;
+      payload.role = "Recruiter";
 
       //generate token
       const token = jwt.sign({ ...payload }, process.env.JWT_SECRETE_KEY, {
@@ -409,7 +356,6 @@ module.exports = {
   },
   refreshToken: async (req, res) => {
     try {
-      console.log(req.body);
       const { refreshToken } = req.body;
       // redis.get(`refreshToken:${refreshToken}`, (error, result) => {
       //   if (!error && result !== null) {
@@ -443,6 +389,107 @@ module.exports = {
         res,
         400,
         `Bad request (${error.message})`,
+        null
+      );
+    }
+  },
+  forgotPasswordProcess: async (req, res) => {
+    try {
+      const { email, tipe } = req.query;
+      let userData = "";
+      if (tipe == "worker") {
+        userData = await authModel.checkUserData(null, email);
+        if (userData.length < 1) {
+          return helperWrapper.response(
+            res,
+            400,
+            `Akun Dengan Email : ${email} Tidak Ditemukan`,
+            null
+          );
+        }
+      } else if (tipe == "recruiter") {
+        userData = await authModel.checkRecruiterData(email, null);
+        if (userData.length < 1) {
+          return helperWrapper.response(
+            res,
+            400,
+            `Akun Dengan Email : ${email} Tidak Ditemukan`,
+            null
+          );
+        }
+      }
+      const token = jwt.sign({ email, tipe }, process.env.JWT_SECRETE_KEY, {
+        expiresIn: "1d",
+      });
+      const setDataEmail = {
+        to: email,
+        subject: "Forgot Password in Jobrect ?",
+        template: "forgot",
+        data: {
+          email: email,
+          link: `${process.env.APP_URL}/auth/forgot-password/${token}`,
+        },
+        attachment: [],
+      };
+
+      // disable while development
+      await sendMail.forgotPassword(setDataEmail);
+      return helperWrapper.response(
+        res,
+        200,
+        `Success Send Email To ${email}`,
+        email
+      );
+    } catch (error) {
+      return helperWrapper.response(
+        res,
+        400,
+        `bad request ${error.message}`,
+        null
+      );
+    }
+  },
+  forgotPassword: async (req, res) => {
+    try {
+      const { email, tipe } = req.decodeToken;
+      const { password, confirmPassword } = req.body;
+      if (password !== confirmPassword) {
+        return helperWrapper.response(res, 400, `Password Tidak Sama`, null);
+      }
+      console.log(email, tipe, password, confirmPassword);
+      if (tipe == "worker") {
+        userData = await authModel.checkUserData(null, email);
+        if (userData.length < 1) {
+          return helperWrapper.response(
+            res,
+            400,
+            `Akun Dengan Email : ${email} Tidak Ditemukan`,
+            null
+          );
+        }
+      } else if (tipe == "recruiter") {
+        userData = await authModel.checkRecruiterData(email, null);
+        if (userData.length < 1) {
+          return helperWrapper.response(
+            res,
+            400,
+            `Akun Dengan Email : ${email} Tidak Ditemukan`,
+            null
+          );
+        }
+      }
+
+      // return helperWrapper.response(
+      //   res,
+      //   200,
+      //   `Success Send Email To ${email}`,
+      //   email
+      // );
+    } catch (error) {
+      return helperWrapper.response(
+        res,
+        400,
+        `bad request ${error.message}`,
         null
       );
     }
