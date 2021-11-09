@@ -3,9 +3,10 @@ const express = require("express");
 const Router = express.Router();
 const authRoutes = require("../modules/auth/authRoutes");
 const workerRoutes = require("../modules/worker/workerRoutes");
+const recruiterRoutes = require("../modules/recruiter/recruiterRoutes");
+
 const skillRoutes = require("../modules/skill/skillRoutes");
 const portofolioRoutes = require("../modules/portfolio/portofolioRoutes");
-const recruiterRoutes = require("../modules/recruiter/recruiterRoutes");
 
 Router.use("/auth", authRoutes);
 Router.use("/worker", workerRoutes);

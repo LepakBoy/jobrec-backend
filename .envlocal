@@ -1,0 +1,29 @@
+DATABASE_HOST = localhost
+DATABASE_USER = root 
+DATABASE_PASSWORD = 
+DATABASE_NAME = jobrec
+PORT = 3000
+
+
+RDS_HOST = 127.0.0.1
+RDS_PORT = 6379
+RDS_PASS =
+==================
+APP_URL = http://localhost:3000
+
+PORT=3001
+
+DATABASE_HOST=ec2-54-236-24-175.compute-1.amazonaws.com
+DATABASE_NAME=fw11fikri_jobrec
+DATABASE_USER=fw11fikri
+DATABASE_PASSWORD=xKv84r
+
+
+EMAIL_SENDER_PASS = Lepakdev35.
+EMAIL_SENDER = lepakdev@gmail.com
+
+JWT_SECRETE_KEY = secrete123
+
+RDS_HOST = redis-13169.c60.us-west-1-2.ec2.cloud.redislabs.com
+RDS_PORT = 13169
+RDS_PASS = BLaIBim7JccZfoFQ1bK5wP2R5CHhUsPs

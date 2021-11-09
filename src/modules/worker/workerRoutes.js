@@ -5,7 +5,7 @@ const workerController = require("./workerController");
 const authMiddleware = require("../../middleware/auth");
 const UploadImage = require("../../middleware/imageAvatar");
 
-// Router.get("/cek", authController.registerPekerja);
+Router.get("/", workerController.getAllWorker);
 Router.patch(
   "/update-wroker/:username",
   UploadImage,

@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require("uuid");
 const authModel = require("./authModel");
 const recruiterModel = require("../recruiter/recruiterModel");
+const workerModel = require("../worker/workerModel");
 const bcrypt = require("bcrypt");
 const sendMail = require("../../helpers/email");
 const helperWrapper = require("../../helpers/wrapper");
@@ -407,14 +408,11 @@ module.exports = {
           return helperWrapper.response(
             res,
             400,
-            `Akun Dengan Email : ${email} Tidak Ditemukan`,
+            `Akun Worker Dengan Email : ${email} Tidak Ditemukan`,
             null
           );
         }
-        const result = await recruiterModel.updateWorkerPasswordByEmail(
-          password,
-          email
-        );
+        await workerModel.updateWorkerPasswordByEmail(password, email);
         return helperWrapper.response(
           res,
           200,
@@ -427,10 +425,17 @@ module.exports = {
           return helperWrapper.response(
             res,
             400,
-            `Akun Dengan Email : ${email} Tidak Ditemukan`,
+            `Akun Recruiter Dengan Email : ${email} Tidak Ditemukan`,
             null
           );
         }
+        await recruiterModel.updateRecruiterPasswordByEmail(password, email);
+        return helperWrapper.response(
+          res,
+          200,
+          `Success Change Password To ${email}`,
+          email
+        );
       }
     } catch (error) {
       return helperWrapper.response(
@@ -467,7 +472,7 @@ module.exports = {
         }
       }
       const token = jwt.sign({ email, tipe }, process.env.JWT_SECRETE_KEY, {
-        expiresIn: "10s",
+        expiresIn: "1h",
       });
       const setDataEmail = {
         to: email,
