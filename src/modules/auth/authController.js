@@ -5,6 +5,7 @@ const recruiterModel = require("../recruiter/recruiterModel");
 const bcrypt = require("bcrypt");
 const sendMail = require("../../helpers/email");
 const helperWrapper = require("../../helpers/wrapper");
+const redis = require("../../config/redis");
 require("dotenv").config();
 
 module.exports = {
