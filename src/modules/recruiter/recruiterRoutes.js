@@ -22,5 +22,9 @@ Router.patch(
   middlewareRecruiter,
   recruiterController.updateImagePerusahaan
 );
-
+Router.post(
+  "/hire-worker",
+  middlewareAuth.authentication,
+  recruiterController.hireWorker
+);
 module.exports = Router;
