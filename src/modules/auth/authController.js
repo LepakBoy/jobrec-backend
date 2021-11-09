@@ -28,7 +28,6 @@ module.exports = {
       };
 
       if (checkUserData.length > 0) {
-        // console.log(checkUserData[0].username);
         if (checkUserData[0].username === setData.username) {
           return helperWrapper.response(
             res,
@@ -75,7 +74,13 @@ module.exports = {
       await sendMail.verificationAccount(setDataEmail);
 
       const result = await authModel.register(setData);
-      return helperWrapper.response(res, 200, `get data`, result);
+      return helperWrapper.response(
+        res,
+        200,
+        `Registrasi Berhasil,Silahkan cek email anda untuk aktifasi
+      `,
+        result
+      );
     } catch (error) {
       return helperWrapper.response(
         res,
@@ -138,7 +143,12 @@ module.exports = {
           );
         }
         if (checkUserData[0].nohp === nohp) {
-          return helperWrapper.response(res, 400, `hp udh dipake user`, null);
+          return helperWrapper.response(
+            res,
+            400,
+            `Nomor Telefon Telah Terdafta di akun lain`,
+            null
+          );
         }
       }
 
@@ -149,7 +159,7 @@ module.exports = {
         data: {
           name: setData.nama_lengkap,
           email: email,
-          link: `${process.env.APP_URL}/auth/activate-account-recruiter/${setData.id}`,
+          link: `${process.env.APP_URL}/auth/activate-account/${setData.id}`,
         },
         attachment: [],
       };
@@ -158,7 +168,13 @@ module.exports = {
       await sendMail.verificationAccount(setDataEmail);
 
       const result = await authModel.registerRecruiter(setData);
-      return helperWrapper.response(res, 200, `get data`, result);
+      return helperWrapper.response(
+        res,
+        200,
+        `Registrasi Berhasil,Silahkan cek email anda untuk aktifasi
+      `,
+        result
+      );
     } catch (error) {
       return helperWrapper.response(
         res,
@@ -182,7 +198,7 @@ module.exports = {
       return helperWrapper.response(
         res,
         200,
-        `success activate account`,
+        `Aktifasi akun berhasil, silahkan login`,
         result
       );
     } catch (error) {
@@ -204,7 +220,7 @@ module.exports = {
       return helperWrapper.response(
         res,
         200,
-        `success activate account`,
+        `Aktifasi akun berhasil, silahkan login`,
         result
       );
     } catch (error) {
@@ -222,7 +238,7 @@ module.exports = {
       const checkUserData = await authModel.checkUserData(null, email);
 
       if (checkUserData.length < 1) {
-        return helperWrapper.response(res, 400, `email not registred`, null);
+        return helperWrapper.response(res, 400, `Email tidak terdaftar`, null);
       }
 
       //checking accountStatus isActive ?
@@ -231,7 +247,7 @@ module.exports = {
         return helperWrapper.response(
           res,
           400,
-          `check your email for account acticvation`,
+          `Silahkan cek email Anda terlebih dahulu untuk aktifasi akun`,
           null
         );
       }
@@ -242,7 +258,7 @@ module.exports = {
         checkUserData[0].password
       );
       if (!validPass) {
-        return helperWrapper.response(res, 400, `wrong password`);
+        return helperWrapper.response(res, 400, `Password Salah`);
       }
 
       //declare payload
@@ -262,7 +278,7 @@ module.exports = {
         { expiresIn: "24h" }
       );
 
-      return helperWrapper.response(res, 200, `success login`, {
+      return helperWrapper.response(res, 200, `Berhasil Masuk`, {
         username: payload.username,
         token,
         refreshToken,
@@ -283,7 +299,7 @@ module.exports = {
       const checkRecruiterData = await authModel.checkRecruiterData(email);
 
       if (checkRecruiterData.length < 1) {
-        return helperWrapper.response(res, 400, `email not registred`, null);
+        return helperWrapper.response(res, 400, `Email tidak terdaftar`, null);
       }
 
       //checking accountStatus isActive ?
@@ -292,7 +308,7 @@ module.exports = {
         return helperWrapper.response(
           res,
           400,
-          `check your email for account acticvation`,
+          `Silahkan cek email Anda terlebih dahulu untuk aktifasi akun`,
           null
         );
       }
@@ -303,7 +319,7 @@ module.exports = {
         checkRecruiterData[0].password
       );
       if (!validPass) {
-        return helperWrapper.response(res, 400, `wrong password`);
+        return helperWrapper.response(res, 400, `Password Salah`);
       }
 
       //declare payload
@@ -323,7 +339,7 @@ module.exports = {
         { expiresIn: "24h" }
       );
 
-      return helperWrapper.response(res, 200, `success login`, {
+      return helperWrapper.response(res, 200, `Berhasil Masuk`, {
         id: payload.id,
         token,
         refreshToken,
