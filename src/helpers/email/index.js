@@ -9,7 +9,7 @@ module.exports = {
       const transporter = nodmailer.createTransport({
         host: "smtp.gmail.com",
         port: 587,
-        secure: false,
+        secure: true,
         auth: {
           user: process.env.EMAIL_SENDER,
           pass: process.env.EMAIL_SENDER_PASS,
