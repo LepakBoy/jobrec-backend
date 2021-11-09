@@ -1,10 +1,10 @@
 APP_URL = http://localhost:3000
 
-DATABASE_HOST = localhost
-DATABASE_USER = root 
-DATABASE_PASSWORD = 
-DATABASE_NAME = jobrec
-PORT = 3000
+DATABASE_HOST=ec2-54-236-24-175.compute-1.amazonaws.com
+DATABASE_NAME=fw11fikri_jobrec
+DATABASE_USER=fw11fikri
+DATABASE_PASSWORD=xKv84r
+
 
 
 RDS_HOST = 127.0.0.1

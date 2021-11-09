@@ -18,6 +18,10 @@ module.exports = {
         email,
         nohp
       );
+      const checkRecruiterData = await authModel.checkRecruiterData(
+        email,
+        nohp
+      );
 
       const setData = {
         username,
@@ -26,6 +30,44 @@ module.exports = {
         password: hash,
         nohp,
       };
+
+      //validation data worker and recrutier
+      // if (checkRecruiterData.length > 0) {
+      //   if (checkRecruiterData[0].email === email) {
+      //     return helperWrapper.response(
+      //       res,
+      //       400,
+      //       `Email Sudah Terdaftar di akun lain`,
+      //       null
+      //     );
+      //   }
+      //   if (checkRecruiterData[0].nohp === nohp) {
+      //     return helperWrapper.response(
+      //       res,
+      //       400,
+      //       `Nomor Telfon Telah Terdaftar di akun lain`,
+      //       null
+      //     );
+      //   }
+      // }
+      // if (checkUserData.length > 0) {
+      //   if (checkUserData[0].email === email) {
+      //     return helperWrapper.response(
+      //       res,
+      //       400,
+      //       `Email sudah terdaftar di akun lain`,
+      //       null
+      //     );
+      //   }
+      //   if (checkUserData[0].nohp === nohp) {
+      //     return helperWrapper.response(
+      //       res,
+      //       400,
+      //       `Nomor Telefon Telah Terdafta di akun lain`,
+      //       null
+      //     );
+      //   }
+      // }
 
       if (checkUserData.length > 0) {
         if (checkUserData[0].username === setData.username) {
@@ -77,8 +119,7 @@ module.exports = {
       return helperWrapper.response(
         res,
         200,
-        `Registrasi Berhasil,Silahkan cek email anda untuk aktifasi
-      `,
+        `Registrasi Berhasil, Silahkan cek email anda untuk aktifasi`,
         result
       );
     } catch (error) {
@@ -171,8 +212,7 @@ module.exports = {
       return helperWrapper.response(
         res,
         200,
-        `Registrasi Berhasil,Silahkan cek email anda untuk aktifasi
-      `,
+        `Registrasi Berhasil, Silahkan cek email anda untuk aktifasi`,
         result
       );
     } catch (error) {

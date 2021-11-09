@@ -36,7 +36,7 @@ module.exports = {
   },
   updatePerusahaan: async (req, res) => {
     try {
-      const { id } = req.params;
+      const id = req.decodeToken.id;
       const checkId = await recruiterModel.getPerusahaanById(id);
 
       if (checkId.length < 1) {
@@ -127,13 +127,14 @@ module.exports = {
       const result = await recruiterModel.updatePerusahaan(setData, id);
 
       return helperWrapper.response(res, 200, `Data berhasil diubah`, result);
-    } catch (error) {}
-    return helperWrapper.response(
-      res,
-      400,
-      `bad request ${error.message}`,
-      null
-    );
+    } catch (error) {
+      return helperWrapper.response(
+        res,
+        400,
+        `bad request ${error.message}`,
+        null
+      );
+    }
   },
   updateImagePerusahaan: async (req, res) => {
     try {
