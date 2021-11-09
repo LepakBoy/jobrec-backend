@@ -159,7 +159,7 @@ module.exports = {
         data: {
           name: setData.nama_lengkap,
           email: email,
-          link: `${process.env.APP_URL}/auth/activate-account/${setData.id}`,
+          link: `${process.env.APP_URL}/auth/activate-account-recruiter/${setData.id}`,
         },
         attachment: [],
       };
