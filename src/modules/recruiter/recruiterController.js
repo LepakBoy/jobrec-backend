@@ -14,12 +14,17 @@ module.exports = {
         return helperWrapper.response(
           res,
           404,
-          `data by id ${id} not found`,
+          `Data dengan ID ${id} tidak ditemukan`,
           null
         );
       }
 
-      return helperWrapper.response(res, 200, `success create data`, checkId);
+      return helperWrapper.response(
+        res,
+        200,
+        `Berhasil mendapatkan data`,
+        checkId
+      );
     } catch (error) {
       return helperWrapper.response(
         res,
@@ -31,14 +36,14 @@ module.exports = {
   },
   updatePerusahaan: async (req, res) => {
     try {
-      const { id } = req.params;
+      const id = req.decodeToken.id;
       const checkId = await recruiterModel.getPerusahaanById(id);
 
       if (checkId.length < 1) {
         return helperWrapper.response(
           res,
           404,
-          `data by id ${id} not found`,
+          `Data dengan ID ${id} tidak ditemukan`,
           null
         );
       }
@@ -121,14 +126,15 @@ module.exports = {
 
       const result = await recruiterModel.updatePerusahaan(setData, id);
 
-      return helperWrapper.response(res, 200, `success update data`, result);
-    } catch (error) {}
-    return helperWrapper.response(
-      res,
-      400,
-      `bad request ${error.message}`,
-      null
-    );
+      return helperWrapper.response(res, 200, `Data berhasil diubah`, result);
+    } catch (error) {
+      return helperWrapper.response(
+        res,
+        400,
+        `bad request ${error.message}`,
+        null
+      );
+    }
   },
   updatePassword: async (req, res) => {
     try {
@@ -190,7 +196,7 @@ module.exports = {
 
       const result = recruiterModel.updateImagePerusahaan(setData, id);
 
-      return helperWrapper.response(res, 200, `success update data`, result);
+      return helperWrapper.response(res, 200, `Data berhasil diubah`, result);
     } catch (error) {
       return helperWrapper.response(
         res,
