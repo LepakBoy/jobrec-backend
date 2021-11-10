@@ -2,9 +2,11 @@ const jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require("uuid");
 const authModel = require("./authModel");
 const recruiterModel = require("../recruiter/recruiterModel");
+const workerModel = require("../worker/workerModel");
 const bcrypt = require("bcrypt");
 const sendMail = require("../../helpers/email");
 const helperWrapper = require("../../helpers/wrapper");
+const redis = require("../../config/redis");
 require("dotenv").config();
 
 module.exports = {
@@ -18,6 +20,10 @@ module.exports = {
         email,
         nohp
       );
+      const checkRecruiterData = await authModel.checkRecruiterData(
+        email,
+        nohp
+      );
 
       const setData = {
         username,
@@ -27,8 +33,45 @@ module.exports = {
         nohp,
       };
 
+      //validation data worker and recrutier
+      // if (checkRecruiterData.length > 0) {
+      //   if (checkRecruiterData[0].email === email) {
+      //     return helperWrapper.response(
+      //       res,
+      //       400,
+      //       `Email Sudah Terdaftar di akun lain`,
+      //       null
+      //     );
+      //   }
+      //   if (checkRecruiterData[0].nohp === nohp) {
+      //     return helperWrapper.response(
+      //       res,
+      //       400,
+      //       `Nomor Telfon Telah Terdaftar di akun lain`,
+      //       null
+      //     );
+      //   }
+      // }
+      // if (checkUserData.length > 0) {
+      //   if (checkUserData[0].email === email) {
+      //     return helperWrapper.response(
+      //       res,
+      //       400,
+      //       `Email sudah terdaftar di akun lain`,
+      //       null
+      //     );
+      //   }
+      //   if (checkUserData[0].nohp === nohp) {
+      //     return helperWrapper.response(
+      //       res,
+      //       400,
+      //       `Nomor Telefon Telah Terdafta di akun lain`,
+      //       null
+      //     );
+      //   }
+      // }
+
       if (checkUserData.length > 0) {
-        // console.log(checkUserData[0].username);
         if (checkUserData[0].username === setData.username) {
           return helperWrapper.response(
             res,
@@ -75,7 +118,12 @@ module.exports = {
       // await sendMail.verificationAccount(setDataEmail);
 
       const result = await authModel.register(setData);
-      return helperWrapper.response(res, 200, `get data`, result);
+      return helperWrapper.response(
+        res,
+        200,
+        `Registrasi Berhasil, Silahkan cek email anda untuk aktifasi`,
+        result
+      );
     } catch (error) {
       return helperWrapper.response(
         res,
@@ -138,7 +186,12 @@ module.exports = {
           );
         }
         if (checkUserData[0].nohp === nohp) {
-          return helperWrapper.response(res, 400, `hp udh dipake user`, null);
+          return helperWrapper.response(
+            res,
+            400,
+            `Nomor Telefon Telah Terdafta di akun lain`,
+            null
+          );
         }
       }
 
@@ -158,7 +211,12 @@ module.exports = {
       await sendMail.verificationAccount(setDataEmail);
 
       const result = await authModel.registerRecruiter(setData);
-      return helperWrapper.response(res, 200, `get data`, result);
+      return helperWrapper.response(
+        res,
+        200,
+        `Registrasi Berhasil, Silahkan cek email anda untuk aktifasi`,
+        result
+      );
     } catch (error) {
       return helperWrapper.response(
         res,
@@ -182,7 +240,7 @@ module.exports = {
       return helperWrapper.response(
         res,
         200,
-        `success activate account`,
+        `Aktifasi akun berhasil, silahkan login`,
         result
       );
     } catch (error) {
@@ -204,7 +262,7 @@ module.exports = {
       return helperWrapper.response(
         res,
         200,
-        `success activate account`,
+        `Aktifasi akun berhasil, silahkan login`,
         result
       );
     } catch (error) {
@@ -222,7 +280,7 @@ module.exports = {
       const checkUserData = await authModel.checkUserData(null, email);
 
       if (checkUserData.length < 1) {
-        return helperWrapper.response(res, 400, `email not registred`, null);
+        return helperWrapper.response(res, 400, `Email tidak terdaftar`, null);
       }
 
       //checking accountStatus isActive ?
@@ -231,7 +289,7 @@ module.exports = {
       //   return helperWrapper.response(
       //     res,
       //     400,
-      //     `check your email for account acticvation`,
+      //     `Silahkan cek email Anda terlebih dahulu untuk aktifasi akun`,
       //     null
       //   );
       // }
@@ -242,7 +300,7 @@ module.exports = {
         checkUserData[0].password
       );
       if (!validPass) {
-        return helperWrapper.response(res, 400, `wrong password`);
+        return helperWrapper.response(res, 400, `Password Salah`);
       }
 
       //declare payload
@@ -262,7 +320,7 @@ module.exports = {
         { expiresIn: "24h" }
       );
 
-      return helperWrapper.response(res, 200, `success login`, {
+      return helperWrapper.response(res, 200, `Berhasil Masuk`, {
         username: payload.username,
         token,
         refreshToken,
@@ -283,19 +341,19 @@ module.exports = {
       const checkRecruiterData = await authModel.checkRecruiterData(email);
 
       if (checkRecruiterData.length < 1) {
-        return helperWrapper.response(res, 400, `email not registred`, null);
+        return helperWrapper.response(res, 400, `Email tidak terdaftar`, null);
       }
 
       //checking accountStatus isActive ?
       // disable while development
-      if (checkRecruiterData[0].accountStatus !== "active") {
-        return helperWrapper.response(
-          res,
-          400,
-          `check your email for account acticvation`,
-          null
-        );
-      }
+      // if (checkRecruiterData[0].accountStatus !== "active") {
+      //   return helperWrapper.response(
+      //     res,
+      //     400,
+      //     `Silahkan cek email Anda terlebih dahulu untuk aktifasi akun`,
+      //     null
+      //   );
+      // }
 
       //compare password
       const validPass = await bcrypt.compare(
@@ -303,7 +361,7 @@ module.exports = {
         checkRecruiterData[0].password
       );
       if (!validPass) {
-        return helperWrapper.response(res, 400, `wrong password`);
+        return helperWrapper.response(res, 400, `Password Salah`);
       }
 
       //declare payload
@@ -323,7 +381,7 @@ module.exports = {
         { expiresIn: "24h" }
       );
 
-      return helperWrapper.response(res, 200, `success login`, {
+      return helperWrapper.response(res, 200, `Berhasil Masuk`, {
         id: payload.id,
         token,
         refreshToken,
@@ -407,14 +465,11 @@ module.exports = {
           return helperWrapper.response(
             res,
             400,
-            `Akun Dengan Email : ${email} Tidak Ditemukan`,
+            `Akun Worker Dengan Email : ${email} Tidak Ditemukan`,
             null
           );
         }
-        const result = await recruiterModel.updateWorkerPasswordByEmail(
-          password,
-          email
-        );
+        await workerModel.updateWorkerPasswordByEmail(password, email);
         return helperWrapper.response(
           res,
           200,
@@ -427,10 +482,17 @@ module.exports = {
           return helperWrapper.response(
             res,
             400,
-            `Akun Dengan Email : ${email} Tidak Ditemukan`,
+            `Akun Recruiter Dengan Email : ${email} Tidak Ditemukan`,
             null
           );
         }
+        await recruiterModel.updateRecruiterPasswordByEmail(password, email);
+        return helperWrapper.response(
+          res,
+          200,
+          `Success Change Password To ${email}`,
+          email
+        );
       }
     } catch (error) {
       return helperWrapper.response(
@@ -467,7 +529,7 @@ module.exports = {
         }
       }
       const token = jwt.sign({ email, tipe }, process.env.JWT_SECRETE_KEY, {
-        expiresIn: "10s",
+        expiresIn: "1h",
       });
       const setDataEmail = {
         to: email,
@@ -481,13 +543,13 @@ module.exports = {
       };
 
       // disable while development
-      await sendMail.forgotPassword(setDataEmail);
-      return helperWrapper.response(
-        res,
-        200,
-        `Success Send Email To ${email}`,
-        email
-      );
+      // await sendMail.forgotPassword(setDataEmail);
+      // return helperWrapper.response(
+      //   res,
+      //   200,
+      //   `Success Send Email To ${email}`,
+      //   email
+      // );
     } catch (error) {
       return helperWrapper.response(
         res,

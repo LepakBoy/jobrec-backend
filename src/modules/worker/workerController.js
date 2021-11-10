@@ -3,11 +3,71 @@ const jwt = require("jsonwebtoken");
 const helperWrapper = require("../../helpers/wrapper");
 const workerModel = require("./workerModel");
 const sendMail = require("../../helpers/email");
-const bcrypt = require("bcrypt");
 const deleteFile = require("../../helpers/delete");
 
 module.exports = {
   // Worker personal
+  getAllWorker: async (req, res) => {
+    try {
+      let { page, limit, skillName, sort, sortType } = req.query;
+      skillName = skillName == null ? `%` : `%${skillName}%`;
+      page = typeof page == "number" ? page : 1;
+      limit = 5;
+      sortType = sortType || "DESC";
+      sort = sort || "createdAt";
+      const offset = page * limit - limit;
+      const totalData = await workerModel.countAllWorker(skillName);
+      const totalPage = Math.ceil(totalData / limit);
+      const pageInfo = {
+        page,
+        totalPage,
+        limit,
+        totalData: totalData || 0,
+      };
+      const result = await workerModel.getAllWorker(
+        limit,
+        offset,
+        skillName,
+        sort == "skill" ? "createdAt" : sort,
+        sortType
+      );
+      let resultData = [];
+      result.map((e) => {
+        let skill = workerModel
+          .getWorkerSkillByUsername(e.username)
+          .then((res) => {
+            let listSkill = [];
+            res.map((el) => {
+              listSkill.push(el.nama_skill);
+              jumlahSkill = el.total;
+            });
+            let mapData = { ...e, skill: listSkill };
+            resultData.push(mapData);
+          });
+      });
+      setTimeout(() => {
+        if (sort == "skill") {
+          resultData.sort(function (a, b) {
+            return b.skill.length - a.skill.length;
+          });
+        }
+        return helperWrapper.response(
+          res,
+          200,
+          "success Get Data",
+          resultData,
+          pageInfo
+        );
+      }, 100);
+    } catch (error) {
+      return helperWrapper.response(
+        res,
+        400,
+        `Bad request (${error.message}`,
+        null
+      );
+    }
+  },
   getWorkerByUsername: async (req, res) => {
     try {
       const { username } = req.params;

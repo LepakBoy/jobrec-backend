@@ -1,237 +1,268 @@
-const { v4: uuidv4 } = require("uuid");
-const jwt = require("jsonwebtoken");
+const recruiterModel = require("./recruiterModel");
+const authModel = require("../auth/authModel");
 const helperWrapper = require("../../helpers/wrapper");
-const workerModel = require("./recruiterModel");
-const sendMail = require("../../helpers/email");
 const deleteFile = require("../../helpers/delete");
+const workerModel = require("../worker/workerModel");
+const sendMail = require("../../helpers/email");
 
 module.exports = {
-  // Worker personal
-  getWorkerByUsername: async (req, res) => {
-    try {
-      const { username } = req.params;
-      const result = await workerModel.getWorkerByUsername(username);
-      if (result.length < 1) {
-        return helperWrapper.response(
-          res,
-          404,
-          `Worker by username ${username} Not FOund`,
-          null
-        );
-      } else {
-        return helperWrapper.response(
-          res,
-          200,
-          "Sukses get worker by Username",
-          result
-        );
-      }
-    } catch (error) {
-      return helperWrapper.response(
-        res,
-        400,
-        `Bad request (${error.message}`,
-        null
-      );
-    }
-  },
-  updatePersonalData: async (req, res) => {
-    try {
-      const { username } = req.params;
-      const checkUsername = await workerModel.getWorkerByUsername(username);
-      if (checkUsername.length < 1) {
-        return helperWrapper.response(
-          res,
-          404,
-          `Worker by Id ${Username} Not FOund`,
-          null
-        );
-      }
-      const {
-        jobdesk,
-        domisili,
-        url_ig,
-        url_gitlab,
-        url_github,
-        deskripsi,
-        avatar,
-      } = req.body;
-      const setData = {
-        jobdesk,
-        domisili,
-        url_ig,
-        url_gitlab,
-        url_github,
-        deskripsi,
-        avatar: req.file ? req.file.filename : null,
-        updatedAt: new Date(Date.now()),
-      };
-      for (const data in setData) {
-        if (!setData[data]) {
-          delete setData[data];
-        }
-      }
-      if (req.file && checkUsername[0].avatar) {
-        deleteFile(`public/uploads/avatar/${checkUsername[0].avatar}`);
-      }
-      const result = await workerModel.updatePersonalData(setData, username);
-      return helperWrapper.response(res, 200, "Sucess update data", result);
-    } catch (error) {
-      return helperWrapper.response(
-        res,
-        400,
-        `Bad request (${error.message}`,
-        null
-      );
-    }
-  },
-  postWorkerExp: async (req, res) => {
-    try {
-      const {
-        username,
-        nama_perusahaan,
-        posisi,
-        tgl_masuk,
-        tgl_keluar,
-        deskripsi,
-      } = req.body;
-      const setData = {
-        username,
-        nama_perusahaan,
-        posisi,
-        tgl_masuk,
-        tgl_keluar,
-        deskripsi,
-      };
-      const result = await workerModel.postWorkerExp(setData);
-      return helperWrapper.response(res, 200, "Success create skill", result);
-    } catch (error) {
-      return helperWrapper.response(
-        res,
-        400,
-        `Bad request (${error.message}`,
-        null
-      );
-    }
-  },
-  getWorkerExpByUsername: async (req, res) => {
-    try {
-      const { username } = req.params;
-      const result = await workerModel.getWorkerExpByUsername(username);
-      if (result.length < 1) {
-        return helperWrapper.response(
-          res,
-          404,
-          `Worker Experience by username ${username} Not FOund`,
-          null
-        );
-      } else {
-        return helperWrapper.response(
-          res,
-          200,
-          "Sukses get worker Experience by Username",
-          result
-        );
-      }
-    } catch (error) {
-      return helperWrapper.response(
-        res,
-        400,
-        `Bad request (${error.message}`,
-        null
-      );
-    }
-  },
-  getWorkerExpById: async (req, res) => {
+  getPerusahaanById: async (req, res) => {
     try {
       const { id } = req.params;
-      const result = await workerModel.getWorkerExpById(id);
-      if (result.length < 1) {
-        return helperWrapper.response(
-          res,
-          404,
-          `Worker Experience by Id ${id} Not FOund`,
-          null
-        );
-      } else {
-        return helperWrapper.response(
-          res,
-          200,
-          "Sukses get worker Experience by Id",
-          result
-        );
-      }
-    } catch (error) {
-      return helperWrapper.response(
-        res,
-        400,
-        `Bad request (${error.message}`,
-        null
-      );
-    }
-  },
-  deletedWorkerExp: async (req, res) => {
-    try {
-      const { id } = req.params;
-      const checkId = await workerModel.getWorkerExpById(id);
+
+      const checkId = await recruiterModel.getPerusahaanById(id);
+
       if (checkId.length < 1) {
         return helperWrapper.response(
           res,
-          200,
-          `Pengalaman id: ${id} Tidak Ditemukan`,
+          404,
+          `Data dengan ID ${id} tidak ditemukan`,
           null
         );
       }
-      const result = await workerModel.deletedWorkerExp(id);
+
       return helperWrapper.response(
         res,
         200,
-        `Succes Deleted Pengalaman Username: ${id}`,
-        result
+        `Berhasil mendapatkan data`,
+        checkId
       );
     } catch (error) {
       return helperWrapper.response(
         res,
         400,
-        `bad Request : ${error.message}`,
+        `bad request ${error.message}`,
         null
       );
     }
   },
-  updateWorkerExp: async (req, res) => {
+  updatePerusahaan: async (req, res) => {
     try {
-      const { id } = req.params;
-      const checkId = await workerModel.getWorkerExpById;
+      const id = req.decodeToken.id;
+      const checkId = await recruiterModel.getPerusahaanById(id);
+
       if (checkId.length < 1) {
         return helperWrapper.response(
           res,
           404,
-          `Worker by Id ${id} Not FOund`,
+          `Data dengan ID ${id} tidak ditemukan`,
           null
         );
       }
-      const { nama_perusahaan, posisi, tgl_masuk, tgl_keluar, deskripsi } =
-        req.body;
-      const setData = {
+
+      const {
+        nama_lengkap,
+        email,
         nama_perusahaan,
-        posisi,
-        tgl_masuk,
-        tgl_keluar,
+        bidang,
+        domisili,
         deskripsi,
+        url_ig,
+        url_linkedin,
+        nohp,
+      } = req.body;
+
+      const setData = {
+        nama_lengkap,
+        email,
+        nama_perusahaan,
+        bidang,
+        domisili,
+        deskripsi,
+        url_ig,
+        url_linkedin,
+        nohp,
         updatedAt: new Date(Date.now()),
       };
+
       for (const data in setData) {
         if (!setData[data]) {
           delete setData[data];
         }
       }
-      const result = await workerModel.updateWorkerExp(id);
-      return helperWrapper.response(res, 200, "Sucess update data", result);
+
+      //validasi email dan nohp
+      const checkUserData = await authModel.checkUserData(null, email, nohp);
+      const checkRecruiterData = await authModel.checkRecruiterData(
+        email,
+        nohp
+      );
+
+      //validation data worker and recrutier
+      if (checkRecruiterData.length > 0) {
+        if (checkRecruiterData[0].email === email) {
+          return helperWrapper.response(
+            res,
+            400,
+            `Email Sudah Terdaftar Di Akun Lain`,
+            null
+          );
+        }
+        if (checkRecruiterData[0].nohp === nohp) {
+          return helperWrapper.response(
+            res,
+            400,
+            `Nomor Hp Sudah Terdaftar Di Akun Lain`,
+            null
+          );
+        }
+      }
+      if (checkUserData.length > 0) {
+        if (checkUserData[0].email === email) {
+          return helperWrapper.response(
+            res,
+            400,
+            `Email Sudah Terdaftar Di Akun Lain`,
+            null
+          );
+        }
+        if (checkUserData[0].nohp === nohp) {
+          return helperWrapper.response(
+            res,
+            400,
+            `Nomor Hp Sudah Terdaftar Di Akun Lain`,
+            null
+          );
+        }
+      }
+
+      const result = await recruiterModel.updatePerusahaan(setData, id);
+
+      return helperWrapper.response(res, 200, `Data berhasil diubah`, result);
+    } catch (error) {
+      return helperWrapper.response(
+        res,
+        400,
+        `bad request ${error.message}`,
+        null
+      );
+    }
+  },
+  updatePassword: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { password, confirmPassword } = req.body;
+      const getRecruiter = await recruiterModel.getPerusahaanById(id);
+      if (password !== confirmPassword || password.length < 6) {
+        return helperWrapper.response(
+          res,
+          404,
+          `Password Tidak Sama, Dan Minimal 6 Huruf`,
+          null
+        );
+      }
+      if (getRecruiter.length < 1) {
+        return helperWrapper.response(
+          res,
+          404,
+          `Recruiter by Id ${id} Not Found`,
+          null
+        );
+      }
+
+      await recruiterModel.updateRecruiterPasswordById(password, id);
+      return helperWrapper.response(res, 200, "Sucess update Password", id);
     } catch (error) {
       return helperWrapper.response(
         res,
         400,
         `Bad request (${error.message}`,
+        null
+      );
+    }
+  },
+  updateImagePerusahaan: async (req, res) => {
+    try {
+      const id = req.decodeToken.id;
+
+      const checkId = await recruiterModel.getPerusahaanById(id);
+
+      if (checkId.length < 1) {
+        return helperWrapper.response(
+          res,
+          404,
+          `data by id ${id} not found`,
+          null
+        );
+      }
+
+      const avatar = req.file ? req.file.filename : null;
+      const setData = {
+        avatar,
+        updatedAt: new Date(Date.now()),
+      };
+
+      if (checkId[0].avatar && req.file) {
+        deleteFile(`public/uploads/recruiter/${checkId[0].avatar}`);
+      }
+
+      const result = recruiterModel.updateImagePerusahaan(setData, id);
+
+      return helperWrapper.response(res, 200, `Data berhasil diubah`, result);
+    } catch (error) {
+      return helperWrapper.response(
+        res,
+        400,
+        `bad request ${error.message}`,
+        null
+      );
+    }
+  },
+  hireWorker: async (req, res) => {
+    try {
+      const { tujuan, pesan, workerUsername } = req.body;
+      if (!tujuan || !pesan || !workerUsername) {
+        return helperWrapper.response(
+          res,
+          400,
+          `Field Harus Terisi Semua`,
+          null
+        );
+      }
+      const userHire = {
+        nama_perusahaan: req.decodeToken.nama_perusahaan,
+        nama_lengkap: req.decodeToken.nama_lengkap,
+        email: req.decodeToken.email,
+        nohp: req.decodeToken.nohp,
+      };
+      const userTargetHire = await workerModel.getWorkerByUsername(
+        workerUsername
+      );
+      if (userTargetHire.length < 1) {
+        return helperWrapper.response(
+          res,
+          400,
+          `Worker Yang mau di hire tidak ditemukan`,
+          null
+        );
+      }
+      const setDataEmail = {
+        to: userTargetHire[0].email,
+        subject: `New ${tujuan} Offer From ${userHire.nama_perusahaan} on Jobrect App`,
+        template: "hire",
+        data: {
+          namePenerima: userTargetHire[0].name,
+          emailPengirim: userHire.email,
+          nama_lengkap: userHire.nama_lengkap,
+          nama_perusahaan: userHire.nama_perusahaan,
+          pesan,
+          link: `${process.env.APP_URL_FrontEND}`,
+        },
+        attachment: [],
+      };
+      await sendMail.hireWorker(setDataEmail);
+
+      return helperWrapper.response(
+        res,
+        200,
+        `Email Berhasil Terkirim`,
+        userTargetHire[0].email
+      );
+    } catch (error) {
+      return helperWrapper.response(
+        res,
+        400,
+        `bad request ${error.message}`,
         null
       );
     }
