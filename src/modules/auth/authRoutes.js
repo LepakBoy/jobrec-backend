@@ -9,6 +9,7 @@ Router.post("/register-recruiter", authController.registerRecruiter);
 Router.post("/login", authController.loginWorker);
 Router.post("/login-recruiter", authController.loginRecruiter);
 Router.post("/logout", authController.logout);
+Router.post("/refresh-token", authController.refreshToken);
 Router.get(
   "/activate-account/:username",
   authMiddleware.isForgotnRegister,

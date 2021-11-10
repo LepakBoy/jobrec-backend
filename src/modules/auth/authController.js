@@ -13,6 +13,14 @@ module.exports = {
   registerWorker: async (req, res) => {
     try {
       const { username, name, email, password, nohp } = req.body;
+      if (password.length < 6) {
+        return helperWrapper.response(
+          res,
+          404,
+          `Password Kurang dari 6 kata`,
+          null
+        );
+      }
 
       const hash = await bcrypt.hash(password, 10);
       const checkUserData = await authModel.checkUserData(
@@ -115,7 +123,7 @@ module.exports = {
       };
 
       // disable while development
-      // await sendMail.verificationAccount(setDataEmail);
+      await sendMail.verificationAccount(setDataEmail);
 
       const result = await authModel.register(setData);
       return helperWrapper.response(
@@ -137,6 +145,15 @@ module.exports = {
   registerRecruiter: async (req, res) => {
     try {
       const { name, companyName, filed, email, password, nohp } = req.body;
+
+      if (password.length < 6) {
+        return helperWrapper.response(
+          res,
+          404,
+          `Password Kurang dari 6 kata`,
+          null
+        );
+      }
 
       const hash = await bcrypt.hash(password, 10);
 
@@ -279,20 +296,29 @@ module.exports = {
       const { email, password } = req.body;
       const checkUserData = await authModel.checkUserData(null, email);
 
+      if (password.length < 6) {
+        return helperWrapper.response(
+          res,
+          404,
+          `Password Kurang dari 6 kata`,
+          null
+        );
+      }
+
       if (checkUserData.length < 1) {
         return helperWrapper.response(res, 400, `Email tidak terdaftar`, null);
       }
 
       //checking accountStatus isActive ?
       //disabled while develompent
-      // if (checkUserData[0].accountStatus !== "active") {
-      //   return helperWrapper.response(
-      //     res,
-      //     400,
-      //     `Silahkan cek email Anda terlebih dahulu untuk aktifasi akun`,
-      //     null
-      //   );
-      // }
+      if (checkUserData[0].accountStatus !== "active") {
+        return helperWrapper.response(
+          res,
+          400,
+          `Silahkan cek email Anda terlebih dahulu untuk aktifasi akun`,
+          null
+        );
+      }
 
       //compare password
       const validPass = await bcrypt.compare(
@@ -340,20 +366,29 @@ module.exports = {
       const { email, password } = req.body;
       const checkRecruiterData = await authModel.checkRecruiterData(email);
 
+      if (password.length < 6) {
+        return helperWrapper.response(
+          res,
+          404,
+          `Password Kurang dari 6 kata`,
+          null
+        );
+      }
+
       if (checkRecruiterData.length < 1) {
         return helperWrapper.response(res, 400, `Email tidak terdaftar`, null);
       }
 
       //checking accountStatus isActive ?
       // disable while development
-      // if (checkRecruiterData[0].accountStatus !== "active") {
-      //   return helperWrapper.response(
-      //     res,
-      //     400,
-      //     `Silahkan cek email Anda terlebih dahulu untuk aktifasi akun`,
-      //     null
-      //   );
-      // }
+      if (checkRecruiterData[0].accountStatus !== "active") {
+        return helperWrapper.response(
+          res,
+          400,
+          `Silahkan cek email Anda terlebih dahulu untuk aktifasi akun`,
+          null
+        );
+      }
 
       //compare password
       const validPass = await bcrypt.compare(
@@ -423,24 +458,39 @@ module.exports = {
             "Your refresh token cannot be use"
           );
         }
-        jwt.verify(refreshToken, process.env.JWT_PRIVATE, (error, result) => {
-          if (error) {
-            return helperWrapper.response(res, 403, error.message);
+        jwt.verify(
+          refreshToken,
+          process.env.JWT_SECRETE_KEY,
+          (error, result) => {
+            if (error) {
+              return helperWrapper.response(res, 403, error.message);
+            }
+            delete result.iat;
+            delete result.exp;
+            const token = jwt.sign(result, process.env.JWT_SECRETE_KEY, {
+              expiresIn: "1h",
+            });
+            const newRefreshToken = jwt.sign(
+              result,
+              process.env.JWT_SECRETE_KEY,
+              {
+                expiresIn: "24h",
+              }
+            );
+
+            redis.setex(
+              `refreshToken:${refreshToken}`,
+              3600 * 24,
+              refreshToken
+            );
+
+            return helperWrapper.response(res, 200, "Success Refresh Token !", {
+              id: result.id,
+              token,
+              refreshToken: newRefreshToken,
+            });
           }
-          delete result.iat;
-          delete result.exp;
-          const token = jwt.sign(result, process.env.JWT_PRIVATE, {
-            expiresIn: "1h",
-          });
-          const newRefreshToken = jwt.sign(result, process.env.JWT_PRIVATE, {
-            expiresIn: "24h",
-          });
-          return helperWrapper.response(res, 200, "Success Refresh Token !", {
-            id: result.id,
-            token,
-            refreshToken: newRefreshToken,
-          });
-        });
+        );
       });
     } catch (error) {
       return helperWrapper.response(
@@ -543,13 +593,13 @@ module.exports = {
       };
 
       // disable while development
-      // await sendMail.forgotPassword(setDataEmail);
-      // return helperWrapper.response(
-      //   res,
-      //   200,
-      //   `Success Send Email To ${email}`,
-      //   email
-      // );
+      await sendMail.forgotPassword(setDataEmail);
+      return helperWrapper.response(
+        res,
+        200,
+        `Success Send Email To ${email}`,
+        email
+      );
     } catch (error) {
       return helperWrapper.response(
         res,

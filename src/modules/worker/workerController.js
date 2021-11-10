@@ -4,6 +4,7 @@ const helperWrapper = require("../../helpers/wrapper");
 const workerModel = require("./workerModel");
 const sendMail = require("../../helpers/email");
 const deleteFile = require("../../helpers/delete");
+const bcrypt = require("bcrypt");
 
 module.exports = {
   // Worker personal
@@ -117,6 +118,24 @@ module.exports = {
         deskripsi,
         type,
       } = req.body;
+      // Jika input form tidak diisi
+      if (
+        jobdesk == "" ||
+        domisili == "" ||
+        url_ig == "" ||
+        url_gitlab == "" ||
+        url_github == "" ||
+        deskripsi == "" ||
+        type == ""
+      ) {
+        return helperWrapper.response(
+          res,
+          400,
+          `Input Masih Kosong, Mohon isi Semua Inputan `,
+          null
+        );
+      }
+
       const setData = {
         jobdesk,
         domisili,
@@ -134,6 +153,24 @@ module.exports = {
         }
       }
 
+      // if (checkUsername.length > 0) {
+      //   if (checkUsername[0].email === email) {
+      //     return helperWrapper.response(
+      //       res,
+      //       400,
+      //       `Email Sudah Terdaftar Di Akun Lain`,
+      //       null
+      //     );
+      //   }
+      //   if (checkUsername[0].nohp === nohp) {
+      //     return helperWrapper.response(
+      //       res,
+      //       400,
+      //       `Nomor Hp Sudah Terdaftar Di Akun Lain`,
+      //       null
+      //     );
+      //   }
+      // }
       const result = await workerModel.updatePersonalData(setData, username);
       return helperWrapper.response(res, 200, "Sucess update data", result);
     } catch (error) {
@@ -153,7 +190,7 @@ module.exports = {
         return helperWrapper.response(
           res,
           404,
-          `Worker by Id ${Username} Not FOund`,
+          `Worker by Id ${username} Not FOund`,
           null
         );
       }
@@ -162,6 +199,7 @@ module.exports = {
         avatar: req.file ? req.file.filename : null,
         updatedAt: new Date(Date.now()),
       };
+      console.log(avatar);
       for (const data in setData) {
         if (!setData[data]) {
           delete setData[data];
@@ -209,9 +247,9 @@ module.exports = {
     } catch (error) {
       return helperWrapper.response(
         res,
-        400,
-        `Bad request (${error.message}`,
-        null
+        200,
+        "Success create Personal data",
+        result
       );
     }
   },
@@ -238,7 +276,7 @@ module.exports = {
       //   return helperWrapper.response(res, 400, `Password tidak sama`, null);
       // }
       console.log(password);
-      if (password !== confirmPassword || password.length < 6) {
+      if (password !== confirm_password || password.length < 6) {
         return helperWrapper.response(
           res,
           404,
@@ -247,6 +285,63 @@ module.exports = {
         );
       }
       console.log(password);
+      const passwordEnkrip = await bcrypt.hash(password, 10);
+      const setData = {
+        password: passwordEnkrip,
+        updatedAt: new Date(Date.now()),
+      };
+      console.log(setData.password);
+      const result = await workerModel.updatePasswordWorker(setData, username);
+      return helperWrapper.response(
+        res,
+        200,
+        "Success Update Password user",
+        result
+      );
+    } catch (error) {
+      return helperWrapper.response(
+        res,
+        400,
+        `Bad request (${error.message})`,
+        null
+      );
+    }
+  },
+  updatePasswordWorker: async (req, res) => {
+    try {
+      const username = req.decodeToken.username;
+      const checkUsername = await workerModel.getWorkerByUsername(username);
+      if (checkUsername.length < 1) {
+        return helperWrapper.response(
+          res,
+          404,
+          `Data by Id ${username} Not FOund`,
+          null
+        );
+      }
+      console.log(checkUsername);
+      const { password, confirm_password } = req.body;
+      // Perbandingan Password lama dengan database
+      // const isValidPassword = await bcrypt.compare(
+      //   old_password,
+      //   checkUsername[0].password
+      // );
+      // if (!isValidPassword) {
+      //   return helperWrapper.response(res, 400, `Password tidak sama`, null);
+      // }
+
+      if (password !== confirm_password) {
+        return helperWrapper.response(res, 404, `Password Tida Sesuai`, null);
+      }
+      if (password.length < 6) {
+        return helperWrapper.response(
+          res,
+          404,
+          `Password Minimal 6 Huruf`,
+          null
+        );
+      }
+
       const passwordEnkrip = await bcrypt.hash(password, 10);
       const setData = {
         password: passwordEnkrip,
