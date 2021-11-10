@@ -246,9 +246,9 @@ module.exports = {
     } catch (error) {
       return helperWrapper.response(
         res,
-        400,
-        `Bad request (${error.message}`,
-        null
+        200,
+        "Success create Personal data",
+        result
       );
     }
   },
@@ -306,96 +306,56 @@ module.exports = {
       );
     }
   },
-  getWorkerExpById: async (req, res) => {
+  updatePasswordWorker: async (req, res) => {
     try {
-      const { id } = req.params;
-      const result = await workerModel.getWorkerExpById(id);
-      if (result.length < 1) {
+      const username = req.decodeToken.username;
+      const checkUsername = await workerModel.getWorkerByUsername(username);
+      if (checkUsername.length < 1) {
         return helperWrapper.response(
           res,
           404,
-          `Worker Experience by Id ${id} Not FOund`,
-          null
-        );
-      } else {
-        return helperWrapper.response(
-          res,
-          200,
-          "Sukses get worker Experience by Id",
-          result
-        );
-      }
-    } catch (error) {
-      return helperWrapper.response(
-        res,
-        400,
-        `Bad request (${error.message}`,
-        null
-      );
-    }
-  },
-  deletedWorkerExp: async (req, res) => {
-    try {
-      const { id } = req.params;
-      const checkId = await workerModel.getWorkerExpById(id);
-      if (checkId.length < 1) {
-        return helperWrapper.response(
-          res,
-          200,
-          `Pengalaman id: ${id} Tidak Ditemukan`,
+          `Data by Id ${username} Not FOund`,
           null
         );
       }
-      const result = await workerModel.deletedWorkerExp(id);
+      console.log(checkUsername);
+      const { password, confirm_password } = req.body;
+      // Perbandingan Password lama dengan database
+      // const isValidPassword = await bcrypt.compare(
+      //   old_password,
+      //   checkUsername[0].password
+      // );
+      // if (!isValidPassword) {
+      //   return helperWrapper.response(res, 400, `Password tidak sama`, null);
+      // }
+      console.log(password);
+      if (password !== confirmPassword || password.length < 6) {
+        return helperWrapper.response(
+          res,
+          404,
+          `Password Tidak Sama, Dan Minimal 6 Huruf`,
+          null
+        );
+      }
+      console.log(password);
+      const passwordEnkrip = await bcrypt.hash(password, 10);
+      const setData = {
+        password: passwordEnkrip,
+        updatedAt: new Date(Date.now()),
+      };
+      console.log(setData.password);
+      const result = await workerModel.updatePasswordWorker(setData, username);
       return helperWrapper.response(
         res,
         200,
-        `Succes Deleted Pengalaman Username: ${id}`,
+        "Success Update Password user",
         result
       );
     } catch (error) {
       return helperWrapper.response(
         res,
         400,
-        `bad Request : ${error.message}`,
-        null
-      );
-    }
-  },
-  updateWorkerExp: async (req, res) => {
-    try {
-      const { id } = req.params;
-      const checkId = await workerModel.getWorkerExpById;
-      if (checkId.length < 1) {
-        return helperWrapper.response(
-          res,
-          404,
-          `Worker by Id ${id} Not FOund`,
-          null
-        );
-      }
-      const { nama_perusahaan, posisi, tgl_masuk, tgl_keluar, deskripsi } =
-        req.body;
-      const setData = {
-        nama_perusahaan,
-        posisi,
-        tgl_masuk,
-        tgl_keluar,
-        deskripsi,
-        updatedAt: new Date(Date.now()),
-      };
-      for (const data in setData) {
-        if (!setData[data]) {
-          delete setData[data];
-        }
-      }
-      const result = await workerModel.updateWorkerExp(id);
-      return helperWrapper.response(res, 200, "Sucess update data", result);
-    } catch (error) {
-      return helperWrapper.response(
-        res,
-        400,
-        `Bad request (${error.message}`,
+        `Bad request (${error.message})`,
         null
       );
     }
