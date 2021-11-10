@@ -19,7 +19,7 @@ Router.get(
   authController.accountRecruiterActivation
 );
 Router.get("/forgot-password-process/", authController.forgotPasswordProcess);
-Router.get(
+Router.post(
   "/forgot-password/:username",
   authMiddleware.isForgotnRegister,
   authController.forgotPassword

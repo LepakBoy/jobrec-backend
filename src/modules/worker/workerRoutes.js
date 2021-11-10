@@ -7,16 +7,21 @@ const UploadImage = require("../../middleware/imageAvatar");
 
 Router.get("/", workerController.getAllWorker);
 Router.patch(
-  "/update-wroker/:username",
-  UploadImage,
+  "/update-worker",
+  authMiddleware.authentication,
   workerController.updatePersonalData
 );
-Router.get("/get-worker/:username", workerController.getWorkerByUsername);
-Router.post("/post-worker-exp", workerController.postWorkerExp);
-Router.get(
-  "/get-worker-exp/:username",
-  workerController.getWorkerExpByUsername
+Router.patch(
+  "/update-avatar",
+  authMiddleware.authentication,
+  UploadImage,
+  workerController.updateAvatar
 );
-Router.delete("/delete-worker-exp/:id", workerController.deletedWorkerExp);
+Router.get("/get-worker/:username", workerController.getWorkerByUsername);
+Router.patch(
+  "/update-password-worker",
+  authMiddleware.authentication,
+  workerController.updatePasswordWorker
+);
 
 module.exports = Router;

@@ -19,7 +19,7 @@ module.exports = {
     }),
   getWorkerByUsername: (username) =>
     new Promise((resolve, reject) => {
-      connection.query(
+      const pp = connection.query(
         "SELECT * FROM pekerja WHERE username = ?",
         username,
         (error, result) => {
@@ -30,6 +30,7 @@ module.exports = {
           }
         }
       );
+      console.log(pp.sql);
     }),
   countAllWorker: (name) =>
     new Promise((resolve, reject) => {

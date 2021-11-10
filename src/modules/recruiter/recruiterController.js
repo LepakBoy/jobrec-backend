@@ -2,6 +2,8 @@ const recruiterModel = require("./recruiterModel");
 const authModel = require("../auth/authModel");
 const helperWrapper = require("../../helpers/wrapper");
 const deleteFile = require("../../helpers/delete");
+const workerModel = require("../worker/workerModel");
+const sendMail = require("../../helpers/email");
 
 module.exports = {
   getPerusahaanById: async (req, res) => {
@@ -197,6 +199,65 @@ module.exports = {
       const result = recruiterModel.updateImagePerusahaan(setData, id);
 
       return helperWrapper.response(res, 200, `Data berhasil diubah`, result);
+    } catch (error) {
+      return helperWrapper.response(
+        res,
+        400,
+        `bad request ${error.message}`,
+        null
+      );
+    }
+  },
+  hireWorker: async (req, res) => {
+    try {
+      const { tujuan, pesan, workerUsername } = req.body;
+      if (!tujuan || !pesan || !workerUsername) {
+        return helperWrapper.response(
+          res,
+          400,
+          `Field Harus Terisi Semua`,
+          null
+        );
+      }
+      const userHire = {
+        nama_perusahaan: req.decodeToken.nama_perusahaan,
+        nama_lengkap: req.decodeToken.nama_lengkap,
+        email: req.decodeToken.email,
+        nohp: req.decodeToken.nohp,
+      };
+      const userTargetHire = await workerModel.getWorkerByUsername(
+        workerUsername
+      );
+      if (userTargetHire.length < 1) {
+        return helperWrapper.response(
+          res,
+          400,
+          `Worker Yang mau di hire tidak ditemukan`,
+          null
+        );
+      }
+      const setDataEmail = {
+        to: userTargetHire[0].email,
+        subject: `New ${tujuan} Offer From ${userHire.nama_perusahaan} on Jobrect App`,
+        template: "hire",
+        data: {
+          namePenerima: userTargetHire[0].name,
+          emailPengirim: userHire.email,
+          nama_lengkap: userHire.nama_lengkap,
+          nama_perusahaan: userHire.nama_perusahaan,
+          pesan,
+          link: `${process.env.APP_URL_FrontEND}`,
+        },
+        attachment: [],
+      };
+      await sendMail.hireWorker(setDataEmail);
+
+      return helperWrapper.response(
+        res,
+        200,
+        `Email Berhasil Terkirim`,
+        userTargetHire[0].email
+      );
     } catch (error) {
       return helperWrapper.response(
         res,
