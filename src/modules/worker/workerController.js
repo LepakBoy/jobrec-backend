@@ -118,6 +118,24 @@ module.exports = {
         deskripsi,
         type,
       } = req.body;
+      // Jika input form tidak diisi
+      if (
+        jobdesk == "" ||
+        domisili == "" ||
+        url_ig == "" ||
+        url_gitlab == "" ||
+        url_github == "" ||
+        deskripsi == "" ||
+        type == ""
+      ) {
+        return helperWrapper.response(
+          res,
+          400,
+          `Input Masih Kosong, Mohon isi Semua Inputan `,
+          null
+        );
+      }
+
       const setData = {
         jobdesk,
         domisili,
