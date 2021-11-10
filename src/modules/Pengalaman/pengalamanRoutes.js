@@ -11,32 +11,32 @@ const redis = require("../../middleware/redis");
 Router.post(
   "/post-worker-exp",
   authMiddleware.authentication,
-  redis.clearWorkerExp,
+  // redis.clearWorkerExp,
   pengalamanController.postWorkerExp
 );
 Router.get(
   "/get-worker-exp",
   authMiddleware.authentication,
-  redis.getWorkerExpByUsername,
+  // redis.getWorkerExpByUsername,
   pengalamanController.getWorkerExpByUsername
 );
 Router.get(
   "/get-worker-exp-id/:id",
   authMiddleware.authentication,
-  redis.getWorkerExpById,
+  // redis.getWorkerExpById,
   pengalamanController.getWorkerExpById
 );
 Router.delete(
   "/delete-worker-exp",
   authMiddleware.authentication,
-  redis.clearWorkerExp,
+  // redis.clearWorkerExp,
   pengalamanController.deletedWorkerExp
 );
 
 Router.patch(
   "/update-wroker-exp",
   authMiddleware.authentication,
-  redis.clearWorkerExp,
+  // redis.clearWorkerExp,
   pengalamanController.updateWorkerExp
 );
 

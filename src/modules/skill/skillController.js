@@ -1,7 +1,7 @@
 const skillModel = require("./skillModel");
 const authModel = require("../auth/authModel");
 const helperWrapper = require("../../helpers/wrapper");
-
+const redis = require("../../config/redis");
 module.exports = {
   getAllSkillByUsername: async (req, res) => {
     try {
@@ -19,6 +19,8 @@ module.exports = {
       if (result.length < 1) {
         return helperWrapper.response(res, 400, `Skill Tidak Ditemukan`, null);
       }
+      redis.setex(`getSkill:${username}`, 3600, JSON.stringify(result));
+
       return helperWrapper.response(
         res,
         200,

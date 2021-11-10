@@ -23,5 +23,6 @@ Router.patch(
   authMiddleware.authentication,
   workerController.updatePasswordWorker
 );
+Router.delete("/delete-worker-exp/:id", workerController.deletedWorkerExp);
 
 module.exports = Router;

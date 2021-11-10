@@ -4,6 +4,7 @@ const helperWrapper = require("../../helpers/wrapper");
 const workerModel = require("./workerModel");
 const sendMail = require("../../helpers/email");
 const deleteFile = require("../../helpers/delete");
+const bcrypt = require("bcrypt");
 
 module.exports = {
   // Worker personal
@@ -134,6 +135,24 @@ module.exports = {
         }
       }
 
+      // if (checkUsername.length > 0) {
+      //   if (checkUsername[0].email === email) {
+      //     return helperWrapper.response(
+      //       res,
+      //       400,
+      //       `Email Sudah Terdaftar Di Akun Lain`,
+      //       null
+      //     );
+      //   }
+      //   if (checkUsername[0].nohp === nohp) {
+      //     return helperWrapper.response(
+      //       res,
+      //       400,
+      //       `Nomor Hp Sudah Terdaftar Di Akun Lain`,
+      //       null
+      //     );
+      //   }
+      // }
       const result = await workerModel.updatePersonalData(setData, username);
       return helperWrapper.response(res, 200, "Sucess update data", result);
     } catch (error) {
@@ -238,7 +257,7 @@ module.exports = {
       //   return helperWrapper.response(res, 400, `Password tidak sama`, null);
       // }
       console.log(password);
-      if (password !== confirmPassword || password.length < 6) {
+      if (password !== confirm_password || password.length < 6) {
         return helperWrapper.response(
           res,
           404,
@@ -265,6 +284,100 @@ module.exports = {
         res,
         400,
         `Bad request (${error.message})`,
+        null
+      );
+    }
+  },
+  getWorkerExpById: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const result = await workerModel.getWorkerExpById(id);
+      if (result.length < 1) {
+        return helperWrapper.response(
+          res,
+          404,
+          `Worker Experience by Id ${id} Not FOund`,
+          null
+        );
+      } else {
+        return helperWrapper.response(
+          res,
+          200,
+          "Sukses get worker Experience by Id",
+          result
+        );
+      }
+    } catch (error) {
+      return helperWrapper.response(
+        res,
+        400,
+        `Bad request (${error.message}`,
+        null
+      );
+    }
+  },
+  deletedWorkerExp: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const checkId = await workerModel.getWorkerExpById(id);
+      if (checkId.length < 1) {
+        return helperWrapper.response(
+          res,
+          200,
+          `Pengalaman id: ${id} Tidak Ditemukan`,
+          null
+        );
+      }
+      const result = await workerModel.deletedWorkerExp(id);
+      return helperWrapper.response(
+        res,
+        200,
+        `Succes Deleted Pengalaman Username: ${id}`,
+        result
+      );
+    } catch (error) {
+      return helperWrapper.response(
+        res,
+        400,
+        `bad Request : ${error.message}`,
+        null
+      );
+    }
+  },
+  updateWorkerExp: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const checkId = await workerModel.getWorkerExpById;
+      if (checkId.length < 1) {
+        return helperWrapper.response(
+          res,
+          404,
+          `Worker by Id ${id} Not FOund`,
+          null
+        );
+      }
+      const { nama_perusahaan, posisi, tgl_masuk, tgl_keluar, deskripsi } =
+        req.body;
+      const setData = {
+        nama_perusahaan,
+        posisi,
+        tgl_masuk,
+        tgl_keluar,
+        deskripsi,
+        updatedAt: new Date(Date.now()),
+      };
+      for (const data in setData) {
+        if (!setData[data]) {
+          delete setData[data];
+        }
+      }
+      const result = await workerModel.updateWorkerExp(id);
+      return helperWrapper.response(res, 200, "Sucess update data", result);
+    } catch (error) {
+      return helperWrapper.response(
+        res,
+        400,
+        `Bad request (${error.message}`,
         null
       );
     }
