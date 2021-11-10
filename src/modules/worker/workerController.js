@@ -3,8 +3,71 @@ const jwt = require("jsonwebtoken");
 const helperWrapper = require("../../helpers/wrapper");
 const workerModel = require("./workerModel");
 const sendMail = require("../../helpers/email");
+const deleteFile = require("../../helpers/delete");
 
 module.exports = {
+  // Worker personal
+  getAllWorker: async (req, res) => {
+    try {
+      let { page, limit, skillName, sort, sortType } = req.query;
+      skillName = skillName == null ? `%` : `%${skillName}%`;
+      page = typeof page == "number" ? page : 1;
+      limit = 5;
+      sortType = sortType || "DESC";
+      sort = sort || "createdAt";
+      const offset = page * limit - limit;
+      const totalData = await workerModel.countAllWorker(skillName);
+      const totalPage = Math.ceil(totalData / limit);
+      const pageInfo = {
+        page,
+        totalPage,
+        limit,
+        totalData: totalData || 0,
+      };
+      const result = await workerModel.getAllWorker(
+        limit,
+        offset,
+        skillName,
+        sort == "skill" ? "createdAt" : sort,
+        sortType
+      );
+      let resultData = [];
+      result.map((e) => {
+        let skill = workerModel
+          .getWorkerSkillByUsername(e.username)
+          .then((res) => {
+            let listSkill = [];
+            res.map((el) => {
+              listSkill.push(el.nama_skill);
+              jumlahSkill = el.total;
+            });
+            let mapData = { ...e, skill: listSkill };
+            resultData.push(mapData);
+          });
+      });
+      setTimeout(() => {
+        if (sort == "skill") {
+          resultData.sort(function (a, b) {
+            return b.skill.length - a.skill.length;
+          });
+        }
+        return helperWrapper.response(
+          res,
+          200,
+          "success Get Data",
+          resultData,
+          pageInfo
+        );
+      }, 100);
+    } catch (error) {
+      return helperWrapper.response(
+        res,
+        400,
+        `Bad request (${error.message}`,
+        null
+      );
+    }
+  },
   getWorkerByUsername: async (req, res) => {
     try {
       const { username } = req.params;
@@ -35,9 +98,9 @@ module.exports = {
   },
   updatePersonalData: async (req, res) => {
     try {
-      const { username } = req.params;
-      const checkId = await workerModel.getWorkerByUsername(username);
-      if (checkId.length < 1) {
+      const username = req.decodeToken.username;
+      const checkUsername = await workerModel.getWorkerByUsername(username);
+      if (checkUsername.length < 1) {
         return helperWrapper.response(
           res,
           404,
@@ -45,8 +108,15 @@ module.exports = {
           null
         );
       }
-      const { jobdesk, domisili, url_ig, url_gitlab, url_github, deskripsi } =
-        req.body;
+      const {
+        jobdesk,
+        domisili,
+        url_ig,
+        url_gitlab,
+        url_github,
+        deskripsi,
+        type,
+      } = req.body;
       const setData = {
         jobdesk,
         domisili,
@@ -54,13 +124,16 @@ module.exports = {
         url_gitlab,
         url_github,
         deskripsi,
+        type,
         updatedAt: new Date(Date.now()),
       };
+      console.log(setData);
       for (const data in setData) {
         if (!setData[data]) {
           delete setData[data];
         }
       }
+
       const result = await workerModel.updatePersonalData(setData, username);
       return helperWrapper.response(res, 200, "Sucess update data", result);
     } catch (error) {
@@ -72,30 +145,11 @@ module.exports = {
       );
     }
   },
-  // Skill
-  postSkill: async (req, res) => {
+  updateAvatar: async (req, res) => {
     try {
-      const { username, nama_skill } = req.body;
-      const setData = {
-        username,
-        nama_skill,
-      };
-      const result = await workerModel.postSkill(setData);
-      return helperWrapper.response(res, 400, "Success create skill", result);
-    } catch (error) {
-      return helperWrapper.response(
-        res,
-        400,
-        `Bad request (${error.message}`,
-        null
-      );
-    }
-  },
-  updateSkill: async (req, res) => {
-    try {
-      const { username } = req.params;
-      const checkId = await workerModel.getWorkerSkillByUsername(username);
-      if (checkId.length < 1) {
+      const username = req.decodeToken.username;
+      const checkUsername = await workerModel.getWorkerByUsername(username);
+      if (checkUsername.length < 1) {
         return helperWrapper.response(
           res,
           404,
@@ -103,9 +157,9 @@ module.exports = {
           null
         );
       }
-      const { nama_skill } = req.body;
+      const { avatar } = req.body;
       const setData = {
-        nama_skill,
+        avatar: req.file ? req.file.filename : null,
         updatedAt: new Date(Date.now()),
       };
       for (const data in setData) {
@@ -113,7 +167,10 @@ module.exports = {
           delete setData[data];
         }
       }
-      const result = await workerModel.updatePersonalData(setData, username);
+      if (req.file && checkUsername[0].avatar) {
+        deleteFile(`public/uploads/avatar/${checkUsername[0].avatar}`);
+      }
+      const result = await workerModel.updateAvatar(setData, username);
       return helperWrapper.response(res, 200, "Sucess update data", result);
     } catch (error) {
       return helperWrapper.response(
@@ -124,7 +181,6 @@ module.exports = {
       );
     }
   },
-  // Pengalaman Kerja
   postWorkerExp: async (req, res) => {
     try {
       const {
@@ -144,7 +200,12 @@ module.exports = {
         deskripsi,
       };
       const result = await workerModel.postWorkerExp(setData);
-      return helperWrapper.response(res, 200, "Success create skill", result);
+      return helperWrapper.response(
+        res,
+        200,
+        "Success create Personal data",
+        result
+      );
     } catch (error) {
       return helperWrapper.response(
         res,
@@ -154,30 +215,56 @@ module.exports = {
       );
     }
   },
-  getWorkerExpByUsername: async (req, res) => {
+  updatePasswordWorker: async (req, res) => {
     try {
-      const { username } = req.params;
-      const result = await workerModel.getWorkerExpByUsername(username);
-      if (result.length < 1) {
+      const username = req.decodeToken.username;
+      const checkUsername = await workerModel.getWorkerByUsername(username);
+      if (checkUsername.length < 1) {
         return helperWrapper.response(
           res,
           404,
-          `Worker Experience by username ${username} Not FOund`,
+          `Data by Id ${username} Not FOund`,
           null
         );
-      } else {
+      }
+      console.log(checkUsername);
+      const { password, confirm_password } = req.body;
+      // Perbandingan Password lama dengan database
+      // const isValidPassword = await bcrypt.compare(
+      //   old_password,
+      //   checkUsername[0].password
+      // );
+      // if (!isValidPassword) {
+      //   return helperWrapper.response(res, 400, `Password tidak sama`, null);
+      // }
+      console.log(password);
+      if (password !== confirmPassword || password.length < 6) {
         return helperWrapper.response(
           res,
-          200,
-          "Sukses get worker Experience by Username",
-          result
+          404,
+          `Password Tidak Sama, Dan Minimal 6 Huruf`,
+          null
         );
       }
+      console.log(password);
+      const passwordEnkrip = await bcrypt.hash(password, 10);
+      const setData = {
+        password: passwordEnkrip,
+        updatedAt: new Date(Date.now()),
+      };
+      console.log(setData.password);
+      const result = await workerModel.updatePasswordWorker(setData, username);
+      return helperWrapper.response(
+        res,
+        200,
+        "Success Update Password user",
+        result
+      );
     } catch (error) {
       return helperWrapper.response(
         res,
         400,
-        `Bad request (${error.message}`,
+        `Bad request (${error.message})`,
         null
       );
     }
