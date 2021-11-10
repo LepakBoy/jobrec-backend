@@ -17,6 +17,22 @@ module.exports = {
         tgl_keluar,
         deskripsi,
       } = req.body;
+
+      if (
+        nama_perusahaan == "" ||
+        posisi == "" ||
+        tgl_masuk == "" ||
+        tgl_keluar == "" ||
+        deskripsi == ""
+      ) {
+        return helperWrapper.response(
+          res,
+          400,
+          `Input Masih Kosong, Mohon isi Semua Inputan `,
+          null
+        );
+      }
+
       const setData = {
         username,
         nama_perusahaan,
@@ -150,6 +166,21 @@ module.exports = {
       }
       const { nama_perusahaan, posisi, tgl_masuk, tgl_keluar, deskripsi } =
         req.body;
+      // Jika salah satu input kosong
+      if (
+        nama_perusahaan == "" ||
+        posisi == "" ||
+        tgl_masuk == "" ||
+        tgl_keluar == "" ||
+        deskripsi == ""
+      ) {
+        return helperWrapper.response(
+          res,
+          400,
+          `Input Masih Kosong, Mohon isi Semua Inputan `,
+          null
+        );
+      }
       const setData = {
         nama_perusahaan,
         posisi,

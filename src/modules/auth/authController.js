@@ -13,6 +13,14 @@ module.exports = {
   registerWorker: async (req, res) => {
     try {
       const { username, name, email, password, nohp } = req.body;
+      if (password.length < 6) {
+        return helperWrapper.response(
+          res,
+          404,
+          `Password Kurang dari 6 kata`,
+          null
+        );
+      }
 
       const hash = await bcrypt.hash(password, 10);
       const checkUserData = await authModel.checkUserData(
@@ -137,6 +145,15 @@ module.exports = {
   registerRecruiter: async (req, res) => {
     try {
       const { name, companyName, filed, email, password, nohp } = req.body;
+
+      if (password.length < 6) {
+        return helperWrapper.response(
+          res,
+          404,
+          `Password Kurang dari 6 kata`,
+          null
+        );
+      }
 
       const hash = await bcrypt.hash(password, 10);
 
@@ -279,6 +296,15 @@ module.exports = {
       const { email, password } = req.body;
       const checkUserData = await authModel.checkUserData(null, email);
 
+      if (password.length < 6) {
+        return helperWrapper.response(
+          res,
+          404,
+          `Password Kurang dari 6 kata`,
+          null
+        );
+      }
+
       if (checkUserData.length < 1) {
         return helperWrapper.response(res, 400, `Email tidak terdaftar`, null);
       }
@@ -339,6 +365,15 @@ module.exports = {
     try {
       const { email, password } = req.body;
       const checkRecruiterData = await authModel.checkRecruiterData(email);
+
+      if (password.length < 6) {
+        return helperWrapper.response(
+          res,
+          404,
+          `Password Kurang dari 6 kata`,
+          null
+        );
+      }
 
       if (checkRecruiterData.length < 1) {
         return helperWrapper.response(res, 400, `Email tidak terdaftar`, null);
@@ -552,7 +587,7 @@ module.exports = {
         template: "forgot",
         data: {
           email: email,
-          link: `${process.env.APP_URL}/auth/forgot-password/${token}`,
+          link: `${process.env.APP_URL_FrontEND}/confirm-password/${token}`,
         },
         attachment: [],
       };
