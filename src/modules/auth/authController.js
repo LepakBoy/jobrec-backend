@@ -126,7 +126,7 @@ module.exports = {
       };
 
       // disable while development
-      await sendMail.verificationAccount(setDataEmail);
+      // await sendMail.verificationAccount(setDataEmail);
 
       const result = await authModel.register(setData);
       return helperWrapper.response(
@@ -296,14 +296,14 @@ module.exports = {
 
       //checking accountStatus isActive ?
       //disabled while develompent
-      if (checkUserData[0].accountStatus !== "active") {
-        return helperWrapper.response(
-          res,
-          400,
-          `Silahkan cek email Anda terlebih dahulu untuk aktifasi akun`,
-          null
-        );
-      }
+      // if (checkUserData[0].accountStatus !== "active") {
+      //   return helperWrapper.response(
+      //     res,
+      //     400,
+      //     `Silahkan cek email Anda terlebih dahulu untuk aktifasi akun`,
+      //     null
+      //   );
+      // }
 
       //compare password
       const validPass = await bcrypt.compare(
@@ -357,14 +357,14 @@ module.exports = {
 
       //checking accountStatus isActive ?
       // disable while development
-      if (checkRecruiterData[0].accountStatus !== "active") {
-        return helperWrapper.response(
-          res,
-          400,
-          `Silahkan cek email Anda terlebih dahulu untuk aktifasi akun`,
-          null
-        );
-      }
+      // if (checkRecruiterData[0].accountStatus !== "active") {
+      //   return helperWrapper.response(
+      //     res,
+      //     400,
+      //     `Silahkan cek email Anda terlebih dahulu untuk aktifasi akun`,
+      //     null
+      //   );
+      // }
 
       //compare password
       const validPass = await bcrypt.compare(
@@ -554,13 +554,13 @@ module.exports = {
       };
 
       // disable while development
-      await sendMail.forgotPassword(setDataEmail);
-      return helperWrapper.response(
-        res,
-        200,
-        `Success Send Email To ${email}`,
-        email
-      );
+      // await sendMail.forgotPassword(setDataEmail);
+      // return helperWrapper.response(
+      //   res,
+      //   200,
+      //   `Success Send Email To ${email}`,
+      //   email
+      // );
     } catch (error) {
       return helperWrapper.response(
         res,
