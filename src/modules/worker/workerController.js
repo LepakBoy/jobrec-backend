@@ -4,6 +4,7 @@ const helperWrapper = require("../../helpers/wrapper");
 const workerModel = require("./workerModel");
 const sendMail = require("../../helpers/email");
 const deleteFile = require("../../helpers/delete");
+const bcrypt = require("bcrypt");
 
 module.exports = {
   // Worker personal
@@ -153,7 +154,7 @@ module.exports = {
         return helperWrapper.response(
           res,
           404,
-          `Worker by Id ${Username} Not FOund`,
+          `Worker by Id ${username} Not FOund`,
           null
         );
       }
@@ -162,6 +163,7 @@ module.exports = {
         avatar: req.file ? req.file.filename : null,
         updatedAt: new Date(Date.now()),
       };
+      console.log(avatar);
       for (const data in setData) {
         if (!setData[data]) {
           delete setData[data];
@@ -237,16 +239,19 @@ module.exports = {
       // if (!isValidPassword) {
       //   return helperWrapper.response(res, 400, `Password tidak sama`, null);
       // }
-      console.log(password);
-      if (password !== confirmPassword || password.length < 6) {
+
+      if (password !== confirm_password) {
+        return helperWrapper.response(res, 404, `Password Tida Sesuai`, null);
+      }
+      if (password.length < 6) {
         return helperWrapper.response(
           res,
           404,
-          `Password Tidak Sama, Dan Minimal 6 Huruf`,
+          `Password Minimal 6 Huruf`,
           null
         );
       }
-      console.log(password);
+
       const passwordEnkrip = await bcrypt.hash(password, 10);
       const setData = {
         password: passwordEnkrip,

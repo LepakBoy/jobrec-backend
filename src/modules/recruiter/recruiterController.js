@@ -4,6 +4,7 @@ const helperWrapper = require("../../helpers/wrapper");
 const deleteFile = require("../../helpers/delete");
 const workerModel = require("../worker/workerModel");
 const sendMail = require("../../helpers/email");
+const bcrypt = require("bcrypt");
 
 module.exports = {
   getPerusahaanById: async (req, res) => {
@@ -140,14 +141,17 @@ module.exports = {
   },
   updatePassword: async (req, res) => {
     try {
-      const { id } = req.params;
+      const id = req.decodeToken.id;
       const { password, confirmPassword } = req.body;
       const getRecruiter = await recruiterModel.getPerusahaanById(id);
-      if (password !== confirmPassword || password.length < 6) {
+      if (password !== confirmPassword) {
+        return helperWrapper.response(res, 404, `Password Tidak Sesuai`, null);
+      }
+      if (password.length < 6) {
         return helperWrapper.response(
           res,
           404,
-          `Password Tidak Sama, Dan Minimal 6 Huruf`,
+          `Password Minimal 6 Character`,
           null
         );
       }
@@ -159,9 +163,10 @@ module.exports = {
           null
         );
       }
+      const hash = await bcrypt.hash(password, 10);
 
-      await recruiterModel.updateRecruiterPasswordById(password, id);
-      return helperWrapper.response(res, 200, "Sucess update Password", id);
+      const result = await recruiterModel.updateRecruiterPasswordById(hash, id);
+      return helperWrapper.response(res, 200, "Sucess update Password", result);
     } catch (error) {
       return helperWrapper.response(
         res,
