@@ -2,16 +2,44 @@ const express = require("express");
 
 const Router = express.Router();
 const pengalamanController = require("./pengalamanController");
-const UploadImage = require("../../middleware/imageAvatar");
+const authMiddleware = require("../../middleware/auth");
+const redis = require("../../middleware/redis");
 
 // Router.get("/cek", authController.registerPekerja);
 
 // Pengalaman Pekerja
-Router.post("/post-worker-exp", pengalamanController.postWorkerExp);
+Router.post(
+  "/post-worker-exp",
+  authMiddleware.authentication,
+  redis.clearWorkerExp,
+  pengalamanController.postWorkerExp
+);
 Router.get(
-  "/get-worker-exp/:username",
+  "/get-worker-exp",
+  authMiddleware.authentication,
+  redis.getWorkerExpByUsername,
   pengalamanController.getWorkerExpByUsername
 );
-Router.delete("/delete-worker-exp/:id", pengalamanController.deletedWorkerExp);
+Router.get(
+  "/get-worker-exp-id/:id",
+  authMiddleware.authentication,
+  redis.getWorkerExpById,
+  pengalamanController.getWorkerExpById
+);
+Router.delete(
+  "/delete-worker-exp",
+  authMiddleware.authentication,
+  redis.clearWorkerExp,
+  pengalamanController.deletedWorkerExp
+);
+
+Router.patch(
+  "/update-wroker-exp",
+  authMiddleware.authentication,
+  redis.clearWorkerExp,
+  pengalamanController.updateWorkerExp
+);
+
+Router;
 
 module.exports = Router;

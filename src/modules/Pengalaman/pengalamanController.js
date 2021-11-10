@@ -2,6 +2,8 @@ const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
 const helperWrapper = require("../../helpers/wrapper");
 const pengalamanModel = require("./pengalamanModel");
+const authModel = require("../auth/authModel");
+const redis = require("../../config/redis");
 
 module.exports = {
   // Pengalaman Kerja
@@ -36,20 +38,31 @@ module.exports = {
   },
   getWorkerExpByUsername: async (req, res) => {
     try {
-      const { username } = req.params;
+      const username = req.decodeToken.username;
+      const isRegister = await authModel.getUserByUsername(username);
+      if (isRegister.length < 1) {
+        return helperWrapper.response(
+          res,
+          400,
+          `Username Belum Terdaftar`,
+          null
+        );
+      }
       const result = await pengalamanModel.getWorkerExpByUsername(username);
+      redis.setex(`getPengalaman:${username}`, 3600, JSON.stringify(result));
+
       if (result.length < 1) {
         return helperWrapper.response(
           res,
           404,
-          `Worker Experience by username ${username} Not FOund`,
+          `Pengalaman Tidak ditemukan`,
           null
         );
       } else {
         return helperWrapper.response(
           res,
           200,
-          "Sukses get worker Experience by Username",
+          "Sukses dapat pengalaman",
           result
         );
       }
@@ -66,6 +79,7 @@ module.exports = {
     try {
       const { id } = req.params;
       const result = await pengalamanModel.getWorkerExpById(id);
+      redis.setex(`getPengalaman:${id}`, 3600, JSON.stringify(result));
       if (result.length < 1) {
         return helperWrapper.response(
           res,
@@ -92,21 +106,23 @@ module.exports = {
   },
   deletedWorkerExp: async (req, res) => {
     try {
-      const { id } = req.params;
-      const checkId = await pengalamanModel.getWorkerExpById(id);
-      if (checkId.length < 1) {
+      const username = req.decodeToken.username;
+      const checkUsername = await pengalamanModel.getWorkerExpByUsername(
+        username
+      );
+      if (checkUsername.length < 1) {
         return helperWrapper.response(
           res,
           200,
-          `Pengalaman id: ${id} Tidak Ditemukan`,
+          `Pengalaman username: ${username} Tidak Ditemukan`,
           null
         );
       }
-      const result = await workerModel.deletedWorkerExp(id);
+      const result = await pengalamanModel.deletedWorkerExp(username);
       return helperWrapper.response(
         res,
         200,
-        `Succes Deleted Pengalaman Username: ${id}`,
+        `Succes Deleted Pengalaman Username: ${username}`,
         result
       );
     } catch (error) {
@@ -120,13 +136,15 @@ module.exports = {
   },
   updateWorkerExp: async (req, res) => {
     try {
-      const { id } = req.params;
-      const checkId = await pengalamanModel.getWorkerExpById(id);
-      if (checkId.length < 1) {
+      const username = req.decodeToken.username;
+      const checkUsername = await pengalamanModel.getWorkerExpByUsername(
+        username
+      );
+      if (checkUsername.length < 1) {
         return helperWrapper.response(
           res,
           404,
-          `Worker by Id ${id} Not FOund`,
+          `Worker by Username ${username} Not FOund`,
           null
         );
       }
@@ -145,7 +163,7 @@ module.exports = {
           delete setData[data];
         }
       }
-      const result = await workerModel.updateWorkerExp(id);
+      const result = await pengalamanModel.updateWorkerExp(setData, username);
       return helperWrapper.response(res, 200, "Sucess update data", result);
     } catch (error) {
       return helperWrapper.response(

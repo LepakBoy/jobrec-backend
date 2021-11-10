@@ -48,13 +48,13 @@ module.exports = {
         }
       );
     }),
-  deletedWorkerExp: (id) =>
+  deletedWorkerExp: (username) =>
     new Promise((resolve, reject) => {
       connection.query(
-        `DELETE FROM pengalaman where id = '${id}'`,
+        `DELETE FROM pengalaman where username = '${username}'`,
         (err, res) => {
           if (!err) {
-            resolve(id);
+            resolve(username);
           } else {
             reject(new Error(`SQL: ${err.sqlMessage}`));
           }

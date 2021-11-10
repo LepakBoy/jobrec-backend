@@ -1,0 +1,694 @@
+{
+	"info": {
+		"_postman_id": "eae6a88a-3940-41f8-9ccd-e81f02975b5a",
+		"name": "JOBRECT",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "nohp",
+									"value": "08111111111",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "dega",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "wpandega91@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "dega wafi",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{dev}}/auth/register",
+							"host": [
+								"{{dev}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "amdfikri35@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "pasword",
+									"value": "123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{dev}}/auth/login",
+							"host": [
+								"{{dev}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "skill",
+			"item": [
+				{
+					"name": "Create Skill",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "ez",
+									"type": "text"
+								},
+								{
+									"key": "nama_skill",
+									"value": "Php",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{dev}}/skill",
+							"host": [
+								"{{dev}}"
+							],
+							"path": [
+								"skill"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read Skill By Username",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "ez",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{dev}}/skill",
+							"host": [
+								"{{dev}}"
+							],
+							"path": [
+								"skill"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Skill",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "ez",
+									"type": "text"
+								},
+								{
+									"key": "nama_skill",
+									"value": "JSsX",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{dev}}/skill/update/2",
+							"host": [
+								"{{dev}}"
+							],
+							"path": [
+								"skill",
+								"update",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Skill",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{dev}}/skill/delete/6",
+							"host": [
+								"{{dev}}"
+							],
+							"path": [
+								"skill",
+								"delete",
+								"6"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "portfolio",
+			"item": [
+				{
+					"name": "Create Portfolio",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "ez",
+									"type": "text"
+								},
+								{
+									"key": "nama_applikasi",
+									"value": " Masaki - Masak Online",
+									"type": "text"
+								},
+								{
+									"key": "link_repository",
+									"value": "https://github.com/ArkaWebClass/fw11-intermediateFrontend",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/SmourACE/Downloads/lock 1.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{dev}}/portofolio",
+							"host": [
+								"{{dev}}"
+							],
+							"path": [
+								"portofolio"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read Portfolio By Username",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "ez",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{dev}}/portofolio",
+							"host": [
+								"{{dev}}"
+							],
+							"path": [
+								"portofolio"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Portfolio",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "ez",
+									"type": "text"
+								},
+								{
+									"key": "nama_applikasi",
+									"value": "GojekTiz",
+									"type": "text"
+								},
+								{
+									"key": "link_repository",
+									"value": "https://github.com/ArkaWebClass/fw11-intermediateFrontend",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/SmourACE/Downloads/lock 1.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{dev}}/portofolio/update/20",
+							"host": [
+								"{{dev}}"
+							],
+							"path": [
+								"portofolio",
+								"update",
+								"20"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Portfolio",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{dev}}/portofolio/delete/21",
+							"host": [
+								"{{dev}}"
+							],
+							"path": [
+								"portofolio",
+								"delete",
+								"21"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "worker",
+			"item": [
+				{
+					"name": "Data Pekerja",
+					"item": [
+						{
+							"name": "Update Worker",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "jobdesk",
+											"value": "coba",
+											"type": "text"
+										},
+										{
+											"key": "domisili",
+											"value": "bogor",
+											"type": "text"
+										},
+										{
+											"key": "url_ig",
+											"value": "@pandega",
+											"type": "text"
+										},
+										{
+											"key": "url_gitlab",
+											"value": "@pandega",
+											"type": "text"
+										},
+										{
+											"key": "url_github",
+											"value": "@pandega",
+											"type": "text"
+										},
+										{
+											"key": "deskripsi",
+											"value": "nama saya dega",
+											"type": "text"
+										},
+										{
+											"key": "avatar",
+											"type": "file",
+											"src": "/C:/Users/Public/Pictures/Sample Pictures/Koala.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:3000/worker/update-wroker/pekerjasatusdadada",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"worker",
+										"update-wroker",
+										"pekerjasatusdadada"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Worker By Username",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/worker/get-worker/pekerjasatusdadada",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"worker",
+										"get-worker",
+										"pekerjasatusdadada"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Password",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "old_password",
+											"value": "456",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "password",
+											"value": "123",
+											"type": "text"
+										},
+										{
+											"key": "confirm_password",
+											"value": "123",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:3000/worker/update-password-worker/dega",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"worker",
+										"update-password-worker",
+										"dega"
+									],
+									"query": [
+										{
+											"key": "old_password",
+											"value": "123",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Pengalaman",
+					"item": [
+						{
+							"name": "Create Pengalaman",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "username",
+											"value": "pekerjasatusdadada",
+											"type": "text"
+										},
+										{
+											"key": "nama_perusahaan",
+											"value": "dega company",
+											"type": "text"
+										},
+										{
+											"key": "posisi",
+											"value": "psikologi",
+											"type": "text"
+										},
+										{
+											"key": "tgl_masuk",
+											"value": "2017-11-11",
+											"type": "text"
+										},
+										{
+											"key": "tgl_keluar",
+											"value": "2017-12-11",
+											"type": "text"
+										},
+										{
+											"key": "deskripsi",
+											"value": "konsultasi",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:3000/pengalaman/post-worker-exp",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"pengalaman",
+										"post-worker-exp"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Pengalaman By Username",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/pengalaman/get-worker-exp/pekerjasatusdadada",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"pengalaman",
+										"get-worker-exp",
+										"pekerjasatusdadada"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Pengalaman",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": null
+							},
+							"response": []
+						},
+						{
+							"name": "Update Pengalaman",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "username",
+											"value": "pekerjasatusdadada",
+											"type": "text"
+										},
+										{
+											"key": "nama_perusahaan",
+											"value": "dega company",
+											"type": "text"
+										},
+										{
+											"key": "posisi",
+											"value": "psikologi",
+											"type": "text"
+										},
+										{
+											"key": "tgl_masuk",
+											"value": "2017-11-11",
+											"type": "text"
+										},
+										{
+											"key": "tgl_keluar",
+											"value": "2017-12-11",
+											"type": "text"
+										},
+										{
+											"key": "deskripsi",
+											"value": "konsultasi,Bk",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:3000/pengalaman/update-wroker-exp/pekerjasatusdadada",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"pengalaman",
+										"update-wroker-exp",
+										"pekerjasatusdadada"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Pengalaman By Id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/pengalaman/get-worker-exp-id/0",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"pengalaman",
+										"get-worker-exp-id",
+										"0"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImV6IiwibmFtZSI6ImZpa3JpIGF3b2siLCJlbWFpbCI6ImFtZGZpa3JpMzVAZ21haWwuY29tIiwibm9ocCI6IjU1NTQ0YWRhc2QiLCJqb2JkZXNrIjpudWxsLCJkb21pc2lsaSI6bnVsbCwiYWNjb3VudFN0YXR1cyI6Im5vdEFjdGl2ZSIsInVybF9pZyI6bnVsbCwidXJsX2dpdGxhYiI6bnVsbCwidXJsX2dpdGh1YiI6bnVsbCwiZGVza3JpcHNpIjpudWxsLCJhdmF0YXIiOm51bGwsImlzQWN0aXZlIjpudWxsLCJjcmVhdGVkQXQiOiIyMDIxLTExLTA4VDE0OjMyOjA4LjAwMFoiLCJ1cGRhdGVkQXQiOm51bGwsInJvbGUiOiJXb3JrZXIiLCJpYXQiOjE2MzY0MjM4NjIsImV4cCI6MTYzNjQyNzQ2Mn0.GO0U4tHdTNQgClAUgNYpIV_CeoXvds6bczW9oBrEZ-Q",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
