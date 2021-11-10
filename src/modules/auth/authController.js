@@ -25,15 +25,6 @@ module.exports = {
         nohp
       );
 
-      if (!email || !password || !username || !nohp || !name) {
-        return helperWrapper.response(
-          res,
-          400,
-          `Data tidak boleh kosong`,
-          null
-        );
-      }
-
       const setData = {
         username,
         name,
