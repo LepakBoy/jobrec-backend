@@ -5,7 +5,7 @@ const authMiddleware = require("../../middleware/auth");
 const redis = require("../../middleware/redis");
 
 Router.get(
-  "/",
+  "/:username",
   authMiddleware.authentication,
   redis.getSkillByUsername,
   skillController.getAllSkillByUsername

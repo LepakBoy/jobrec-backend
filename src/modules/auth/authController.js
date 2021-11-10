@@ -537,7 +537,7 @@ module.exports = {
         template: "forgot",
         data: {
           email: email,
-          link: `${process.env.APP_URL}/auth/forgot-password/${token}`,
+          link: `${process.env.APP_URL_FrontEND}/confirm-password/${token}`,
         },
         attachment: [],
       };

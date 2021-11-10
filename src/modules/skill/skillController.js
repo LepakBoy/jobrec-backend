@@ -5,14 +5,14 @@ const redis = require("../../config/redis");
 module.exports = {
   getAllSkillByUsername: async (req, res) => {
     try {
-      const { username } = req.body;
+      const { username } = req.params;
       const isRegister = await authModel.getUserByUsername(username);
       if (isRegister.length < 1) {
         return helperWrapper.response(
           res,
           400,
           `Username Belum Terdaftar`,
-          null
+          username
         );
       }
       const result = await skillModel.getAllSkillByUsername(username);
@@ -45,7 +45,7 @@ module.exports = {
           res,
           400,
           `Username Belum Terdaftar`,
-          null
+          username
         );
       }
       const setData = {
@@ -77,7 +77,7 @@ module.exports = {
           res,
           400,
           `Username Belum Terdaftar`,
-          null
+          username
         );
       }
       if (isAlredy.length > 0) {
