@@ -11,7 +11,7 @@ module.exports = {
     try {
       let { page, limit, skillName, sort, sortType } = req.query;
       skillName = skillName == null ? `%` : `%${skillName}%`;
-      page = typeof page == "number" ? page : 1;
+      page = page ? page : 1;
       limit = 5;
       sortType = sortType || "DESC";
       sort = sort || "createdAt";
