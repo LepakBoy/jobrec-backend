@@ -7,7 +7,7 @@ const redis = require("../../config/redis");
 module.exports = {
   getPortofolioByUsername: async (req, res) => {
     try {
-      const { username } = req.body;
+      const { username } = req.params;
       const isRegister = await authModel.getUserByUsername(username);
       if (isRegister.length < 1) {
         return helperWrapper.response(
@@ -54,7 +54,8 @@ module.exports = {
           null
         );
       }
-      if (!username || !nama_applikasi || !link_repository || !req.file) {
+      console.log(req.file);
+      if (!username || !nama_applikasi || !link_repository) {
         return helperWrapper.response(
           res,
           400,

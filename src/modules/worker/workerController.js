@@ -110,6 +110,8 @@ module.exports = {
         );
       }
       const {
+        name,
+        nohp,
         jobdesk,
         domisili,
         url_ig,
@@ -144,6 +146,8 @@ module.exports = {
         url_github,
         deskripsi,
         type,
+        name,
+        nohp,
         updatedAt: new Date(Date.now()),
       };
       console.log(setData);
@@ -172,7 +176,7 @@ module.exports = {
       //   }
       // }
       const result = await workerModel.updatePersonalData(setData, username);
-      return helperWrapper.response(res, 200, "Sucess update data", result);
+      return helperWrapper.response(res, 200, "Sucess update data", setData);
     } catch (error) {
       return helperWrapper.response(
         res,
