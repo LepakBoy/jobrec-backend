@@ -13,3 +13,9 @@ Fitur - Fitur dalam Project
 - Login
 - Profile pekerja
 - Profile Perekrut
+
+# Teknologi Yang Digunakan
+
+- Node Js
+- PostMan
+- Web Browser
