@@ -59,6 +59,20 @@ module.exports = {
         }
       );
     }),
+  updateAvatar: (data, username) =>
+    new Promise((resolve, reject) => {
+      connection.query(
+        `UPDATE pekerja SET ? WHERE username = ? `,
+        [data, username],
+        (error, result) => {
+          if (!error) {
+            resolve(result);
+          } else {
+            reject(new Error(`SQL : ${error.sqlMessage}`));
+          }
+        }
+      );
+    }),
   postSkill: (data) =>
     new Promise((resolve, reject) => {
       connection.query("INSERT INTO skill SET ?", data, (error, result) => {
@@ -78,6 +92,20 @@ module.exports = {
       connection.query(
         "SELECT * FROM skill WHERE username = ?",
         username,
+        (error, result) => {
+          if (!error) {
+            resolve(result);
+          } else {
+            reject(new Error(`SQL : ${error.sqlMessage}`));
+          }
+        }
+      );
+    }),
+  updatePasswordWorker: (data, username) =>
+    new Promise((resolve, reject) => {
+      connection.query(
+        `UPDATE pekerja SET password = ?, updatedAt = ? WHERE username = ? `,
+        [data.password, data.updatedAt, username],
         (error, result) => {
           if (!error) {
             resolve(result);

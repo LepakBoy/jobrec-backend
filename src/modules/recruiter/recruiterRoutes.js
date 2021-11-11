@@ -5,8 +5,8 @@ const recruiterController = require("./recruiterController");
 const middlewareAuth = require("../../middleware/auth");
 const middlewareRecruiter = require("../../middleware/imageRecruiter");
 
-Router.get(
-  "/update-password/:id",
+Router.patch(
+  "/update-password",
   middlewareAuth.authentication,
   recruiterController.updatePassword
 );
