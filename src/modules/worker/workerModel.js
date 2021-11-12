@@ -61,7 +61,7 @@ module.exports = {
     }),
   updateAvatar: (data, username) =>
     new Promise((resolve, reject) => {
-      connection.query(
+      const pp = connection.query(
         `UPDATE pekerja SET ? WHERE username = ? `,
         [data, username],
         (error, result) => {
@@ -72,6 +72,7 @@ module.exports = {
           }
         }
       );
+      console.log(pp.sql);
     }),
   postSkill: (data) =>
     new Promise((resolve, reject) => {

@@ -203,7 +203,6 @@ module.exports = {
         avatar: req.file ? req.file.filename : null,
         updatedAt: new Date(Date.now()),
       };
-      console.log(avatar);
       for (const data in setData) {
         if (!setData[data]) {
           delete setData[data];
