@@ -90,24 +90,7 @@ module.exports = {
       );
 
       //validation data worker and recrutier
-      if (checkRecruiterData.length > 0) {
-        if (checkRecruiterData[0].email === email) {
-          return helperWrapper.response(
-            res,
-            400,
-            `Email Sudah Terdaftar Di Akun Lain`,
-            null
-          );
-        }
-        if (checkRecruiterData[0].nohp === nohp) {
-          return helperWrapper.response(
-            res,
-            400,
-            `Nomor Hp Sudah Terdaftar Di Akun Lain`,
-            null
-          );
-        }
-      }
+
       if (checkUserData.length > 0) {
         if (checkUserData[0].email === email) {
           return helperWrapper.response(

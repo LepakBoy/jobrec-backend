@@ -556,20 +556,12 @@ module.exports = {
   forgotPasswordProcess: async (req, res) => {
     try {
       const { email, tipe } = req.query;
-      let userData = "";
-      if (tipe == "worker") {
-        userData = await authModel.checkUserData(null, email);
-        if (userData.length < 1) {
-          return helperWrapper.response(
-            res,
-            400,
-            `Akun Dengan Email : ${email} Tidak Ditemukan`,
-            null
-          );
-        }
-      } else if (tipe == "recruiter") {
-        userData = await authModel.checkRecruiterData(email, null);
-        if (userData.length < 1) {
+      let userCheck = await authModel.checkUserData(null, email);
+      if (userCheck.length < 1) {
+        // console.log(" ===== > AKUN DI WORKER TIDAK ADA");
+        userCheck = await authModel.checkRecruiterData(email, null);
+        if (userCheck.length < 1) {
+          // console.log(" ===== > AKUN DI Recruiter TIDAK ADA");
           return helperWrapper.response(
             res,
             400,

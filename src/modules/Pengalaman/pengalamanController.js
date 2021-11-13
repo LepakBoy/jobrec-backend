@@ -122,23 +122,13 @@ module.exports = {
   },
   deletedWorkerExp: async (req, res) => {
     try {
-      const username = req.decodeToken.username;
-      const checkUsername = await pengalamanModel.getWorkerExpByUsername(
-        username
-      );
-      if (checkUsername.length < 1) {
-        return helperWrapper.response(
-          res,
-          200,
-          `Pengalaman username: ${username} Tidak Ditemukan`,
-          null
-        );
-      }
-      const result = await pengalamanModel.deletedWorkerExp(username);
+      const { id } = req.params;
+
+      const result = await pengalamanModel.deletedWorkerExp(id);
       return helperWrapper.response(
         res,
         200,
-        `Succes Deleted Pengalaman Username: ${username}`,
+        `Succes Deleted Pengalaman Id: ${id}`,
         result
       );
     } catch (error) {

@@ -150,7 +150,6 @@ module.exports = {
         nohp,
         updatedAt: new Date(Date.now()),
       };
-      console.log(setData);
       for (const data in setData) {
         if (!setData[data]) {
           delete setData[data];
@@ -268,7 +267,6 @@ module.exports = {
           null
         );
       }
-      console.log(checkUsername);
       const { password, confirm_password } = req.body;
       // Perbandingan Password lama dengan database
       // const isValidPassword = await bcrypt.compare(
@@ -278,7 +276,6 @@ module.exports = {
       // if (!isValidPassword) {
       //   return helperWrapper.response(res, 400, `Password tidak sama`, null);
       // }
-      console.log(password);
       if (password !== confirm_password || password.length < 6) {
         return helperWrapper.response(
           res,
@@ -287,13 +284,11 @@ module.exports = {
           null
         );
       }
-      console.log(password);
       const passwordEnkrip = await bcrypt.hash(password, 10);
       const setData = {
         password: passwordEnkrip,
         updatedAt: new Date(Date.now()),
       };
-      console.log(setData.password);
       const result = await workerModel.updatePasswordWorker(setData, username);
       return helperWrapper.response(
         res,
@@ -322,7 +317,6 @@ module.exports = {
           null
         );
       }
-      console.log(checkUsername);
       const { password, confirm_password } = req.body;
       // Perbandingan Password lama dengan database
       // const isValidPassword = await bcrypt.compare(
@@ -350,7 +344,6 @@ module.exports = {
         password: passwordEnkrip,
         updatedAt: new Date(Date.now()),
       };
-      console.log(setData.password);
       const result = await workerModel.updatePasswordWorker(setData, username);
       return helperWrapper.response(
         res,
