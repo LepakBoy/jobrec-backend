@@ -51,12 +51,7 @@ module.exports = {
   deletedWorkerExp: (id) =>
     new Promise((resolve, reject) => {
       connection.query(
-<<<<<<< HEAD
-        `DELETE FROM pengalaman where id = ?`,
-        id,
-=======
         `DELETE FROM pengalaman where id = '${id}'`,
->>>>>>> 5924f6ff8b5706be3d0f9a0e8e7dc546f6df29b2
         (err, res) => {
           if (!err) {
             resolve(id);
