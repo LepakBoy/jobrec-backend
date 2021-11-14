@@ -486,45 +486,20 @@ module.exports = {
     try {
       const { email, tipe } = req.decodeToken;
       let { password, confirmPassword } = req.body;
+      console.log(tipe);
       if (password !== confirmPassword) {
         return helperWrapper.response(res, 400, `Password Tidak Sama`, null);
       }
       password = await bcrypt.hash(password, 10);
-      if (tipe == "worker") {
-        userData = await authModel.checkUserData(null, email);
-        if (userData.length < 1) {
-          return helperWrapper.response(
-            res,
-            400,
-            `Akun Worker Dengan Email : ${email} Tidak Ditemukan`,
-            null
-          );
-        }
-        await workerModel.updateWorkerPasswordByEmail(password, email);
-        return helperWrapper.response(
-          res,
-          200,
-          `Success Change Password To ${email}`,
-          email
-        );
-      } else if (tipe == "recruiter") {
-        userData = await authModel.checkRecruiterData(email, null);
-        if (userData.length < 1) {
-          return helperWrapper.response(
-            res,
-            400,
-            `Akun Recruiter Dengan Email : ${email} Tidak Ditemukan`,
-            null
-          );
-        }
-        await recruiterModel.updateRecruiterPasswordByEmail(password, email);
-        return helperWrapper.response(
-          res,
-          200,
-          `Success Change Password To ${email}`,
-          email
-        );
-      }
+      await recruiterModel.updateRecruiterPasswordByEmail(password, email);
+      await workerModel.updateWorkerPasswordByEmail(password, email);
+
+      return helperWrapper.response(
+        res,
+        200,
+        `Success Change Password To ${email}`,
+        email
+      );
     } catch (error) {
       return helperWrapper.response(
         res,
@@ -537,20 +512,12 @@ module.exports = {
   forgotPasswordProcess: async (req, res) => {
     try {
       const { email, tipe } = req.query;
-      let userData = "";
-      if (tipe == "worker") {
-        userData = await authModel.checkUserData(null, email);
-        if (userData.length < 1) {
-          return helperWrapper.response(
-            res,
-            400,
-            `Akun Dengan Email : ${email} Tidak Ditemukan`,
-            null
-          );
-        }
-      } else if (tipe == "recruiter") {
-        userData = await authModel.checkRecruiterData(email, null);
-        if (userData.length < 1) {
+      let userCheck = await authModel.checkUserData(null, email);
+      if (userCheck.length < 1) {
+        // console.log(" ===== > AKUN DI WORKER TIDAK ADA");
+        userCheck = await authModel.checkRecruiterData(email, null);
+        if (userCheck.length < 1) {
+          // console.log(" ===== > AKUN DI Recruiter TIDAK ADA");
           return helperWrapper.response(
             res,
             400,

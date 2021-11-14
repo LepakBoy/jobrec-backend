@@ -7,7 +7,7 @@ const redis = require("../../config/redis");
 module.exports = {
   getPortofolioByUsername: async (req, res) => {
     try {
-      const { username } = req.body;
+      const { username } = req.params;
       const isRegister = await authModel.getUserByUsername(username);
       if (isRegister.length < 1) {
         return helperWrapper.response(
@@ -21,7 +21,7 @@ module.exports = {
       if (result.length < 1) {
         return helperWrapper.response(
           res,
-          400,
+          404,
           `Portofolio Tidak Ditemukan`,
           null
         );
@@ -45,6 +45,9 @@ module.exports = {
   createPortfolio: async (req, res) => {
     try {
       const { username, nama_applikasi, link_repository } = req.body;
+      if (!username || !nama_applikasi || !link_repository || !req.file) {
+        return helperWrapper.response(res, 400, `Harap isi semua input!`, null);
+      }
       const isRegister = await authModel.getUserByUsername(username);
 
       if (isRegister.length < 1) {

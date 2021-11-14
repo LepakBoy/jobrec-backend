@@ -68,12 +68,12 @@ module.exports = {
       redis.setex(`getPengalaman:${username}`, 3600, JSON.stringify(result));
 
       if (result.length < 1) {
-        return helperWrapper.response(
-          res,
-          404,
-          `Pengalaman Tidak ditemukan`,
-          null
-        );
+        // return helperWrapper.response(
+        //   res,
+        //   404,
+        //   `Pengalaman Tidak ditemukan`,
+        //   null
+        // );
       } else {
         return helperWrapper.response(
           res,
@@ -137,7 +137,7 @@ module.exports = {
       return helperWrapper.response(
         res,
         200,
-        `Succes Deleted Pengalaman Username: ${id}`,
+        `Succes Deleted Pengalaman Id: ${id}`,
         result
       );
     } catch (error) {
