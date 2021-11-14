@@ -139,7 +139,15 @@ module.exports = {
   registerRecruiter: async (req, res) => {
     try {
       const { name, companyName, bidang, email, password, nohp } = req.body;
-      console.log(name, companyName, bidang, email, password, nohp);
+      console.log(
+        name,
+        companyName,
+        bidang,
+        email,
+        password,
+        nohp,
+        "aaaaaaaaaaaaaaaaaasssssssssssss"
+      );
 
       if (!name || !companyName || !bidang || !email || !password || !nohp) {
         return helperWrapper.response(res, 404, `Data harus diisi semua`, null);
