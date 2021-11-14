@@ -1,14 +1,9 @@
-# Project Backgorund
-
-JobRec :
-JobRec Adalah salah satu aplikasi lamaran pekerjaan secara online yang bertujuan untuk mempermudah para pelamar dalam mencari pekerjaan serta mempermudah perekrut dalam mencari pelamar-pelamar. Cara kerja aplikasi ini adalah pelamar dapat mengunggah CV, Portofolio atau pengalaman kerja mereka ke profile mereka masing-masing dalam aplikasi ini agar perekrut dapat melihat Cv atau portofolio para pelamar serta data diri pelamar sehingga mempermudah perekrut dalam menghubungi pelamar.
+JobRec Adalah salah satu aplikasi lamaran pekerjaan secara online yang bertujuan untuk mempermudah para pelamar dalam mencari pekerjaan serta mempermudah perekrut dalam mencari pelamar-pelamar. Pada aplikasi ini user dibagi menjaid dua role, yaitu pekerja untuk para pencari kerja, dan recruiter untuk para perusahaan yang mencari tenaga kerja. Cara kerja aplikasi ini adalah pekerja dapat mengunggah CV, Portofolio atau pengalaman kerja mereka ke profile mereka masing-masing dalam aplikasi ini agar perekrut dapat melihat Cv atau portofolio para pelamar serta data diri pelamar sehingga mempermudah perekrut dalam menghubungi pelamar.
 
 # Fitur - fitur Project
 
-Fitur - Fitur dalam Project
-
 - Upload portfolio, pengalaman dan skill
-- Kirim pesan untuk pelamar via Email
+- Kirim pesan untuk pekerja via Email
 - Mencari pekerja berdasarkan skill, tipe waktu bekerja, dan atau domisili yang diinginkan
 - Aktifasi akun via Email
 - Update profile 
@@ -17,23 +12,22 @@ Fitur - Fitur dalam Project
 
 # Pada bagian Back End ini dibangun menggunakan bebrapa teknologi yaitu :
 
-- Node Js 
-- Express Js
-- Redis [https://redis.io/documentation]
-- MySql
-- Json Web Token
-- Postman API testing
+- Node Js (https://nodejs.org/en/docs/)
+- Express Js (https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/Introduction)
+- Redis (https://redis.io/documentation)
+- MySql (https://dev.mysql.com/doc/)
+- Json Web Token (https://www.npmjs.com/package/jsonwebtoken)
+- Postman API testing (https://www.postman.com/api-documentation-tool/)
 
+## Roadmap
 
-### Built With
+- [x] API atuhenctication untuk pekerja dan perekrut
+- [x] API update profile untuk perekrut
+- [x] API update profile, upload portfolio, upload skilldan upload pengalaman kerja untuk pekerja
+- [x] HTML Semantic
+- [x] Upload To Github
+- [x] Deploy Netlify : https://tickez.netlify.app/
 
-Website Front End ini dibangun dengan Teknologi Berikut
-
-* [HTML](https://developer.mozilla.org/en-US/docs/Web/HTML?retiredLocale=id)
-* [CSS](https://developer.mozilla.org/id/docs/Web/CSS)
-* [Javascript](https://www.javascript.com/)
-* [Bootstarp](https://getbootstrap.com/)
-* [CSS](https://developer.mozilla.org/id/docs/Web/CSS)
 
 ### Installation
 
@@ -44,21 +38,4 @@ Website Front End ini dibangun dengan Teknologi Berikut
 2. Extrak File Tersebut
 3. Langsung Jalankan (Klik File index.html Atau Open With Live Server)
 
-<!-- ROADMAP -->
-## Roadmap
-
-- [x] Semua page
-- [x] Responsive Semua Page
-- [x] Flex / Grid / Grid Flex Bootstrap
-- [x] HTML Semantic
-- [x] Upload To Github
-- [x] Deploy Netlify : https://tickez.netlify.app/
-
-## License
-
-Distributed under the MIT License.
-<!-- CONTACT -->
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-[product-screenshot]: https://i.ibb.co/TvcNfs6/Screenshot.png
 
