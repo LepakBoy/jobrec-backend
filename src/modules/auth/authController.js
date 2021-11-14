@@ -224,7 +224,6 @@ module.exports = {
 
       // disable while development
       // await sendMail.verificationAccount(setDataEmail);
-      console.log(setData);
       const result = await authModel.registerRecruiter(setData);
 
       return helperWrapper.response(

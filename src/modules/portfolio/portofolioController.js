@@ -21,9 +21,9 @@ module.exports = {
       if (result.length < 1) {
         return helperWrapper.response(
           res,
-          404,
+          200,
           `Portofolio Tidak Ditemukan`,
-          null
+          []
         );
       }
       redis.setex(`getPortofolio:${username}`, 3600, JSON.stringify(result));

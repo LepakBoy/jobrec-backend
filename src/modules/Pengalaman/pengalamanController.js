@@ -18,13 +18,7 @@ module.exports = {
         deskripsi,
       } = req.body;
 
-      if (
-        nama_perusahaan == "" ||
-        posisi == "" ||
-        tgl_masuk == "" ||
-        tgl_keluar == "" ||
-        deskripsi == ""
-      ) {
+      if (!nama_perusahaan || !tgl_masuk || !tgl_keluar || !deskripsi) {
         return helperWrapper.response(
           res,
           400,
@@ -99,9 +93,8 @@ module.exports = {
       if (result.length < 1) {
         return helperWrapper.response(
           res,
-          404,
-          `Worker Experience by Id ${id} Not FOund`,
-          null
+          204,
+          `Worker Experience by Id ${id} Not FOund`
         );
       } else {
         return helperWrapper.response(
