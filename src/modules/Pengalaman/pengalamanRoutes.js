@@ -34,7 +34,7 @@ Router.delete(
 );
 
 Router.patch(
-  "/update-wroker-exp",
+  "/update-wroker-exp/:id",
   authMiddleware.authentication,
   // redis.clearWorkerExp,
   pengalamanController.updateWorkerExp

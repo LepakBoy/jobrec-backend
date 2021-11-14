@@ -61,11 +61,11 @@ module.exports = {
         }
       );
     }),
-  updateWorkerExp: (data, username) =>
+  updateWorkerExp: (data, id) =>
     new Promise((resolve, reject) => {
       connection.query(
-        `UPDATE pengalaman SET ? WHERE username = ? `,
-        [data, username],
+        `UPDATE pengalaman SET ? WHERE id = ? `,
+        [data, id],
         (error, result) => {
           if (!error) {
             resolve(result);
