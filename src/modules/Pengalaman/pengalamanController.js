@@ -115,23 +115,22 @@ module.exports = {
   },
   deletedWorkerExp: async (req, res) => {
     try {
-      const username = req.decodeToken.username;
-      const checkUsername = await pengalamanModel.getWorkerExpByUsername(
-        username
-      );
-      if (checkUsername.length < 1) {
+      const { id } = req.params;
+      const checkId = await pengalamanModel.getWorkerExpById(id);
+      console.log(checkId);
+      if (checkId.length < 1) {
         return helperWrapper.response(
           res,
-          200,
-          `Pengalaman username: ${username} Tidak Ditemukan`,
+          404,
+          `Pengalaman id: ${id} Tidak Ditemukan`,
           null
         );
       }
-      const result = await pengalamanModel.deletedWorkerExp(username);
+      const result = await pengalamanModel.deletedWorkerExp(id);
       return helperWrapper.response(
         res,
         200,
-        `Succes Deleted Pengalaman Username: ${username}`,
+        `Succes Deleted Pengalaman Id: ${id}`,
         result
       );
     } catch (error) {
@@ -145,21 +144,9 @@ module.exports = {
   },
   updateWorkerExp: async (req, res) => {
     try {
-      const username = req.decodeToken.username;
-      const checkUsername = await pengalamanModel.getWorkerExpByUsername(
-        username
-      );
-      if (checkUsername.length < 1) {
-        return helperWrapper.response(
-          res,
-          404,
-          `Worker by Username ${username} Not FOund`,
-          null
-        );
-      }
+      const { id } = req.params;
       const { nama_perusahaan, posisi, tgl_masuk, tgl_keluar, deskripsi } =
         req.body;
-      // Jika salah satu input kosong
       if (
         nama_perusahaan == "" ||
         posisi == "" ||
@@ -174,6 +161,7 @@ module.exports = {
           null
         );
       }
+
       const setData = {
         nama_perusahaan,
         posisi,
@@ -187,7 +175,7 @@ module.exports = {
           delete setData[data];
         }
       }
-      const result = await pengalamanModel.updateWorkerExp(setData, username);
+      const result = await pengalamanModel.updateWorkerExp(setData, id);
       return helperWrapper.response(res, 200, "Sucess update data", result);
     } catch (error) {
       return helperWrapper.response(

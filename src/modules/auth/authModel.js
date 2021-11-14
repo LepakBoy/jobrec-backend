@@ -61,7 +61,7 @@ module.exports = {
     }),
   activationAccount: (data) =>
     new Promise((resolve, reject) => {
-      const pp = connection.query(
+      connection.query(
         "UPDATE pekerja SET accountStatus = ? WHERE username = ?",
         [data.status, data.username],
         (error, result) => {
@@ -72,7 +72,6 @@ module.exports = {
           }
         }
       );
-      console.log(pp.sql);
     }),
   activationRecruiterAccount: (data) =>
     new Promise((resolve, reject) => {

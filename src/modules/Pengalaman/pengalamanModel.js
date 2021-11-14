@@ -48,24 +48,29 @@ module.exports = {
         }
       );
     }),
-  deletedWorkerExp: (username) =>
+  deletedWorkerExp: (id) =>
     new Promise((resolve, reject) => {
       connection.query(
-        `DELETE FROM pengalaman where username = '${username}'`,
+<<<<<<< HEAD
+        `DELETE FROM pengalaman where id = ?`,
+        id,
+=======
+        `DELETE FROM pengalaman where id = '${id}'`,
+>>>>>>> 5924f6ff8b5706be3d0f9a0e8e7dc546f6df29b2
         (err, res) => {
           if (!err) {
-            resolve(username);
+            resolve(id);
           } else {
             reject(new Error(`SQL: ${err.sqlMessage}`));
           }
         }
       );
     }),
-  updateWorkerExp: (data, username) =>
+  updateWorkerExp: (data, id) =>
     new Promise((resolve, reject) => {
       connection.query(
-        `UPDATE pengalaman SET ? WHERE username = ? `,
-        [data, username],
+        `UPDATE pengalaman SET ? WHERE id = ? `,
+        [data, id],
         (error, result) => {
           if (!error) {
             resolve(result);
