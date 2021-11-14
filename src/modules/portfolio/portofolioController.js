@@ -7,7 +7,7 @@ const redis = require("../../config/redis");
 module.exports = {
   getPortofolioByUsername: async (req, res) => {
     try {
-      const { username } = req.body;
+      const { username } = req.params;
       const isRegister = await authModel.getUserByUsername(username);
       if (isRegister.length < 1) {
         return helperWrapper.response(
@@ -21,9 +21,9 @@ module.exports = {
       if (result.length < 1) {
         return helperWrapper.response(
           res,
-          400,
+          200,
           `Portofolio Tidak Ditemukan`,
-          null
+          []
         );
       }
       redis.setex(`getPortofolio:${username}`, 3600, JSON.stringify(result));
@@ -45,7 +45,11 @@ module.exports = {
   createPortfolio: async (req, res) => {
     try {
       const { username, nama_applikasi, link_repository } = req.body;
+      if (!username || !nama_applikasi || !link_repository || !req.file) {
+        return helperWrapper.response(res, 400, `Harap isi semua input!`, null);
+      }
       const isRegister = await authModel.getUserByUsername(username);
+
       if (isRegister.length < 1) {
         return helperWrapper.response(
           res,
@@ -54,7 +58,7 @@ module.exports = {
           null
         );
       }
-      if (!username || !nama_applikasi || !link_repository || !req.file) {
+      if (nama_applikasi == "" || link_repository == "") {
         return helperWrapper.response(
           res,
           400,
@@ -68,7 +72,14 @@ module.exports = {
         link_repository,
         image: req.file ? req.file.filename : null,
       };
+      console.log(setData);
       const result = await portofolioModel.createPortfolio(setData);
+      for (const data in setData) {
+        if (!setData[data]) {
+          delete setData[data];
+        }
+      }
+
       return helperWrapper.response(res, 200, `Created Success`, result);
     } catch (error) {
       return helperWrapper.response(

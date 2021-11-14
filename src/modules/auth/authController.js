@@ -13,14 +13,24 @@ module.exports = {
   registerWorker: async (req, res) => {
     try {
       const { username, name, email, password, nohp } = req.body;
-      if (password.length < 6) {
-        return helperWrapper.response(
-          res,
-          404,
-          `Password Kurang dari 6 kata`,
-          null
-        );
+      if (
+        username == "" ||
+        name == "" ||
+        email == "" ||
+        password == "" ||
+        nohp == ""
+      ) {
+        return helperWrapper.response(res, 404, `Data harus diisi semua`, null);
       }
+
+      // if (password.length < 6) {
+      //   return helperWrapper.response(
+      //     res,
+      //     404,
+      //     `Password Kurang dari 6 kata`,
+      //     null
+      //   );
+      // }
 
       const hash = await bcrypt.hash(password, 10);
       const checkUserData = await authModel.checkUserData(
@@ -42,67 +52,51 @@ module.exports = {
       };
 
       //validation data worker and recrutier
-      // if (checkRecruiterData.length > 0) {
-      //   if (checkRecruiterData[0].email === email) {
-      //     return helperWrapper.response(
-      //       res,
-      //       400,
-      //       `Email Sudah Terdaftar di akun lain`,
-      //       null
-      //     );
-      //   }
-      //   if (checkRecruiterData[0].nohp === nohp) {
-      //     return helperWrapper.response(
-      //       res,
-      //       400,
-      //       `Nomor Telfon Telah Terdaftar di akun lain`,
-      //       null
-      //     );
-      //   }
-      // }
-      // if (checkUserData.length > 0) {
-      //   if (checkUserData[0].email === email) {
-      //     return helperWrapper.response(
-      //       res,
-      //       400,
-      //       `Email sudah terdaftar di akun lain`,
-      //       null
-      //     );
-      //   }
-      //   if (checkUserData[0].nohp === nohp) {
-      //     return helperWrapper.response(
-      //       res,
-      //       400,
-      //       `Nomor Telefon Telah Terdafta di akun lain`,
-      //       null
-      //     );
-      //   }
-      // }
-
-      if (checkUserData.length > 0) {
-        if (checkUserData[0].username === setData.username) {
+      if (checkRecruiterData.length > 0) {
+        if (checkRecruiterData[0].email === email) {
           return helperWrapper.response(
             res,
             400,
-            `Username Telah Digunakan`,
+            `Email Sudah Terdaftar di akun lain`,
             null
           );
-        } else if (checkUserData[0].email === setData.email) {
+        }
+        if (checkRecruiterData[0].nohp === nohp) {
           return helperWrapper.response(
             res,
             400,
-            `Email Telah Digunakan`,
-            null
-          );
-        } else if (checkUserData[0].nohp === setData.nohp) {
-          return helperWrapper.response(
-            res,
-            400,
-            `Nomor Telefon Telah Digunakan`,
+            `Nomor Telfon Telah Terdaftar di akun lain`,
             null
           );
         }
       }
+      if (checkUserData.length > 0) {
+        if (checkUserData[0].username === username) {
+          return helperWrapper.response(
+            res,
+            400,
+            `Username sudah terdaftar di akun lain`,
+            null
+          );
+        }
+        if (checkUserData[0].email === email) {
+          return helperWrapper.response(
+            res,
+            400,
+            `Email sudah terdaftar di akun lain`,
+            null
+          );
+        }
+        if (checkUserData[0].nohp === nohp) {
+          return helperWrapper.response(
+            res,
+            400,
+            `Nomor Telefon Telah Terdafta di akun lain`,
+            null
+          );
+        }
+      }
+
       const token = jwt.sign(
         { data: setData.username },
         process.env.JWT_SECRETE_KEY,
@@ -123,7 +117,7 @@ module.exports = {
       };
 
       // disable while development
-      await sendMail.verificationAccount(setDataEmail);
+      // await sendMail.verificationAccount(setDataEmail);
 
       const result = await authModel.register(setData);
       return helperWrapper.response(
@@ -144,8 +138,12 @@ module.exports = {
 
   registerRecruiter: async (req, res) => {
     try {
-      const { name, companyName, filed, email, password, nohp } = req.body;
+      const { name, companyName, bidang, email, password, nohp } = req.body;
+      console.log(name, companyName, bidang, email, password, nohp);
 
+      if (!name || !companyName || !bidang || !email || !password || !nohp) {
+        return helperWrapper.response(res, 404, `Data harus diisi semua`, null);
+      }
       if (password.length < 6) {
         return helperWrapper.response(
           res,
@@ -168,7 +166,7 @@ module.exports = {
         id: uuidv4(),
         nama_lengkap: name,
         nama_perusahaan: companyName,
-        bidang: filed,
+        bidang,
         email,
         password: hash,
         nohp,
@@ -225,9 +223,9 @@ module.exports = {
       };
 
       // disable while development
-      await sendMail.verificationAccount(setDataEmail);
-
+      // await sendMail.verificationAccount(setDataEmail);
       const result = await authModel.registerRecruiter(setData);
+
       return helperWrapper.response(
         res,
         200,
@@ -296,15 +294,6 @@ module.exports = {
       const { email, password } = req.body;
       const checkUserData = await authModel.checkUserData(null, email);
 
-      if (password.length < 6) {
-        return helperWrapper.response(
-          res,
-          404,
-          `Password Kurang dari 6 kata`,
-          null
-        );
-      }
-
       if (checkUserData.length < 1) {
         return helperWrapper.response(res, 400, `Email tidak terdaftar`, null);
       }
@@ -365,15 +354,6 @@ module.exports = {
     try {
       const { email, password } = req.body;
       const checkRecruiterData = await authModel.checkRecruiterData(email);
-
-      if (password.length < 6) {
-        return helperWrapper.response(
-          res,
-          404,
-          `Password Kurang dari 6 kata`,
-          null
-        );
-      }
 
       if (checkRecruiterData.length < 1) {
         return helperWrapper.response(res, 400, `Email tidak terdaftar`, null);
@@ -505,45 +485,20 @@ module.exports = {
     try {
       const { email, tipe } = req.decodeToken;
       let { password, confirmPassword } = req.body;
+      console.log(tipe);
       if (password !== confirmPassword) {
         return helperWrapper.response(res, 400, `Password Tidak Sama`, null);
       }
       password = await bcrypt.hash(password, 10);
-      if (tipe == "worker") {
-        userData = await authModel.checkUserData(null, email);
-        if (userData.length < 1) {
-          return helperWrapper.response(
-            res,
-            400,
-            `Akun Worker Dengan Email : ${email} Tidak Ditemukan`,
-            null
-          );
-        }
-        await workerModel.updateWorkerPasswordByEmail(password, email);
-        return helperWrapper.response(
-          res,
-          200,
-          `Success Change Password To ${email}`,
-          email
-        );
-      } else if (tipe == "recruiter") {
-        userData = await authModel.checkRecruiterData(email, null);
-        if (userData.length < 1) {
-          return helperWrapper.response(
-            res,
-            400,
-            `Akun Recruiter Dengan Email : ${email} Tidak Ditemukan`,
-            null
-          );
-        }
-        await recruiterModel.updateRecruiterPasswordByEmail(password, email);
-        return helperWrapper.response(
-          res,
-          200,
-          `Success Change Password To ${email}`,
-          email
-        );
-      }
+      await recruiterModel.updateRecruiterPasswordByEmail(password, email);
+      await workerModel.updateWorkerPasswordByEmail(password, email);
+
+      return helperWrapper.response(
+        res,
+        200,
+        `Success Change Password To ${email}`,
+        email
+      );
     } catch (error) {
       return helperWrapper.response(
         res,
@@ -556,20 +511,12 @@ module.exports = {
   forgotPasswordProcess: async (req, res) => {
     try {
       const { email, tipe } = req.query;
-      let userData = "";
-      if (tipe == "worker") {
-        userData = await authModel.checkUserData(null, email);
-        if (userData.length < 1) {
-          return helperWrapper.response(
-            res,
-            400,
-            `Akun Dengan Email : ${email} Tidak Ditemukan`,
-            null
-          );
-        }
-      } else if (tipe == "recruiter") {
-        userData = await authModel.checkRecruiterData(email, null);
-        if (userData.length < 1) {
+      let userCheck = await authModel.checkUserData(null, email);
+      if (userCheck.length < 1) {
+        // console.log(" ===== > AKUN DI WORKER TIDAK ADA");
+        userCheck = await authModel.checkRecruiterData(email, null);
+        if (userCheck.length < 1) {
+          // console.log(" ===== > AKUN DI Recruiter TIDAK ADA");
           return helperWrapper.response(
             res,
             400,
