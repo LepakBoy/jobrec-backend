@@ -7,7 +7,7 @@ const redis = require("../../config/redis");
 module.exports = {
   getPortofolioByUsername: async (req, res) => {
     try {
-      const { username } = req.body;
+      const { username } = req.params;
       const isRegister = await authModel.getUserByUsername(username);
       if (isRegister.length < 1) {
         return helperWrapper.response(
@@ -21,9 +21,9 @@ module.exports = {
       if (result.length < 1) {
         return helperWrapper.response(
           res,
-          400,
+          200,
           `Portofolio Tidak Ditemukan`,
-          null
+          []
         );
       }
       redis.setex(`getPortofolio:${username}`, 3600, JSON.stringify(result));

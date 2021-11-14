@@ -17,7 +17,7 @@ module.exports = {
       }
       const result = await skillModel.getAllSkillByUsername(username);
       if (result.length < 1) {
-        return helperWrapper.response(res, 400, `Skill Tidak Ditemukan`, null);
+        return helperWrapper.response(res, 200, `Skill Tidak Ditemukan`, []);
       }
       redis.setex(`getSkill:${username}`, 3600, JSON.stringify(result));
 
@@ -52,6 +52,14 @@ module.exports = {
         username,
         nama_skill,
       };
+      if (!nama_skill) {
+        return helperWrapper.response(
+          res,
+          400,
+          `Input Masih Kosong, Mohon isi Skill Anda`,
+          null
+        );
+      }
       const result = await skillModel.createSkill(setData);
       return helperWrapper.response(res, 200, `Created Success`, result);
     } catch (error) {

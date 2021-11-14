@@ -225,7 +225,7 @@ module.exports = {
       };
 
       // disable while development
-      await sendMail.verificationAccount(setDataEmail);
+      // await sendMail.verificationAccount(setDataEmail);
 
       const result = await authModel.registerRecruiter(setData);
       return helperWrapper.response(
@@ -296,14 +296,14 @@ module.exports = {
       const { email, password } = req.body;
       const checkUserData = await authModel.checkUserData(null, email);
 
-      if (password.length < 6) {
-        return helperWrapper.response(
-          res,
-          404,
-          `Password Kurang dari 6 kata`,
-          null
-        );
-      }
+      // if (password.length < 6) {
+      //   return helperWrapper.response(
+      //     res,
+      //     404,
+      //     `Password Kurang dari 6 kata`,
+      //     null
+      //   );
+      // }
 
       if (checkUserData.length < 1) {
         return helperWrapper.response(res, 400, `Email tidak terdaftar`, null);
@@ -366,14 +366,14 @@ module.exports = {
       const { email, password } = req.body;
       const checkRecruiterData = await authModel.checkRecruiterData(email);
 
-      if (password.length < 6) {
-        return helperWrapper.response(
-          res,
-          404,
-          `Password Kurang dari 6 kata`,
-          null
-        );
-      }
+      // if (password.length < 6) {
+      //   return helperWrapper.response(
+      //     res,
+      //     404,
+      //     `Password Kurang dari 6 kata`,
+      //     null
+      //   );
+      // }
 
       if (checkRecruiterData.length < 1) {
         return helperWrapper.response(res, 400, `Email tidak terdaftar`, null);
