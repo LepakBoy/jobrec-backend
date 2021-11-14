@@ -505,45 +505,20 @@ module.exports = {
     try {
       const { email, tipe } = req.decodeToken;
       let { password, confirmPassword } = req.body;
+      console.log(tipe);
       if (password !== confirmPassword) {
         return helperWrapper.response(res, 400, `Password Tidak Sama`, null);
       }
       password = await bcrypt.hash(password, 10);
-      if (tipe == "worker") {
-        userData = await authModel.checkUserData(null, email);
-        if (userData.length < 1) {
-          return helperWrapper.response(
-            res,
-            400,
-            `Akun Worker Dengan Email : ${email} Tidak Ditemukan`,
-            null
-          );
-        }
-        await workerModel.updateWorkerPasswordByEmail(password, email);
-        return helperWrapper.response(
-          res,
-          200,
-          `Success Change Password To ${email}`,
-          email
-        );
-      } else if (tipe == "recruiter") {
-        userData = await authModel.checkRecruiterData(email, null);
-        if (userData.length < 1) {
-          return helperWrapper.response(
-            res,
-            400,
-            `Akun Recruiter Dengan Email : ${email} Tidak Ditemukan`,
-            null
-          );
-        }
-        await recruiterModel.updateRecruiterPasswordByEmail(password, email);
-        return helperWrapper.response(
-          res,
-          200,
-          `Success Change Password To ${email}`,
-          email
-        );
-      }
+      await recruiterModel.updateRecruiterPasswordByEmail(password, email);
+      await workerModel.updateWorkerPasswordByEmail(password, email);
+
+      return helperWrapper.response(
+        res,
+        200,
+        `Success Change Password To ${email}`,
+        email
+      );
     } catch (error) {
       return helperWrapper.response(
         res,

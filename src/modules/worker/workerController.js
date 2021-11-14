@@ -318,6 +318,7 @@ module.exports = {
         );
       }
       const { password, confirm_password } = req.body;
+      console.log(password, confirm_password);
       // Perbandingan Password lama dengan database
       // const isValidPassword = await bcrypt.compare(
       //   old_password,
