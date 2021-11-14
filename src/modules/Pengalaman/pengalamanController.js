@@ -123,7 +123,16 @@ module.exports = {
   deletedWorkerExp: async (req, res) => {
     try {
       const { id } = req.params;
-
+      const checkId = await pengalamanModel.getWorkerExpById(id);
+      console.log(checkId);
+      if (checkId.length < 1) {
+        return helperWrapper.response(
+          res,
+          404,
+          `Pengalaman id: ${id} Tidak Ditemukan`,
+          null
+        );
+      }
       const result = await pengalamanModel.deletedWorkerExp(id);
       return helperWrapper.response(
         res,

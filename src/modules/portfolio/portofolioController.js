@@ -49,6 +49,7 @@ module.exports = {
         return helperWrapper.response(res, 400, `Harap isi semua input!`, null);
       }
       const isRegister = await authModel.getUserByUsername(username);
+
       if (isRegister.length < 1) {
         return helperWrapper.response(
           res,
@@ -57,14 +58,28 @@ module.exports = {
           null
         );
       }
-
+      if (nama_applikasi == "" || link_repository == "") {
+        return helperWrapper.response(
+          res,
+          400,
+          `Semua Input Harus Diisi`,
+          null
+        );
+      }
       const setData = {
         username,
         nama_applikasi,
         link_repository,
         image: req.file ? req.file.filename : null,
       };
+      console.log(setData);
       const result = await portofolioModel.createPortfolio(setData);
+      for (const data in setData) {
+        if (!setData[data]) {
+          delete setData[data];
+        }
+      }
+
       return helperWrapper.response(res, 200, `Created Success`, result);
     } catch (error) {
       return helperWrapper.response(
