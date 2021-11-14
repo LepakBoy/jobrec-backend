@@ -333,14 +333,14 @@ module.exports = {
       if (password !== confirm_password) {
         return helperWrapper.response(res, 404, `Password Tida Sesuai`, null);
       }
-      if (password.length < 6) {
-        return helperWrapper.response(
-          res,
-          404,
-          `Password Minimal 6 Huruf`,
-          null
-        );
-      }
+      // if (password.length < 6) {
+      //   return helperWrapper.response(
+      //     res,
+      //     404,
+      //     `Password Minimal 6 Huruf`,
+      //     null
+      //   );
+      // }
 
       const passwordEnkrip = await bcrypt.hash(password, 10);
       const setData = {

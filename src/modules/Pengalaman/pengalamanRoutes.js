@@ -27,7 +27,7 @@ Router.get(
   pengalamanController.getWorkerExpById
 );
 Router.delete(
-  "/delete-worker-exp",
+  "/delete-worker-exp/:id",
   authMiddleware.authentication,
   // redis.clearWorkerExp,
   pengalamanController.deletedWorkerExp
