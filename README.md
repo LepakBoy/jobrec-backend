@@ -31,4 +31,8 @@ Fitur - Fitur dalam Project
 - [x] API update profile, upload portfolio, upload skilldan upload pengalaman kerja untuk pekerja
 - [x] HTML Semantic
 - [x] Upload To Github
-- [x] Deploy Netlify : https://tickez.netlify.app/
+
+## Deploy
+- [x] Front End : https://jobrec.netlify.app/
+- [x] Back  End : https://jobrec.herokuapp.com/
+- [x] Database  : Amazon Web Services 
