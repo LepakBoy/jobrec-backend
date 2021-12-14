@@ -6,14 +6,6 @@ DATABASE_NAME=fw11fikri_jobrec
 DATABASE_USER=fw11fikri
 DATABASE_PASSWORD=xKv84r
 
-
-
-RDS_HOST = 127.0.0.1
-RDS_PORT = 6379
-RDS_PASS =
-==================
-APP_URL = http://localhost:3000
-
 PORT=3001
 
 

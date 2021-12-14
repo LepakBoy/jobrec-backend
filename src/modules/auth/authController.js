@@ -117,7 +117,7 @@ module.exports = {
       };
 
       // disable while development
-      // await sendMail.verificationAccount(setDataEmail);
+      await sendMail.verificationAccount(setDataEmail);
 
       const result = await authModel.register(setData);
       return helperWrapper.response(
@@ -139,7 +139,6 @@ module.exports = {
   registerRecruiter: async (req, res) => {
     try {
       const { name, companyName, bidang, email, password, nohp } = req.body;
-      console.log(name, companyName, bidang, email, password, nohp);
 
       if (!name || !companyName || !bidang || !email || !password || !nohp) {
         return helperWrapper.response(res, 404, `Data harus diisi semua`, null);
@@ -171,7 +170,7 @@ module.exports = {
         password: hash,
         nohp,
       };
-
+      console.log(setData);
       //validation data worker and recrutier
       if (checkRecruiterData.length > 0) {
         if (checkRecruiterData[0].email === email) {
@@ -223,7 +222,7 @@ module.exports = {
       };
 
       // disable while development
-      // await sendMail.verificationAccount(setDataEmail);
+      await sendMail.verificationAccount(setDataEmail);
       const result = await authModel.registerRecruiter(setData);
 
       return helperWrapper.response(
@@ -252,12 +251,13 @@ module.exports = {
 
       const result = await authModel.activationRecruiterAccount(setData);
 
-      return helperWrapper.response(
-        res,
-        200,
-        `Aktifasi akun berhasil, silahkan login`,
-        result
-      );
+      // return helperWrapper.response(
+      //   res,
+      //   200,
+      //   `Aktifasi akun berhasil, silahkan login`,
+      //   result
+      // );
+      return res.redirect(`${process.env.APP_URL_FrontEND}/login`);
     } catch (error) {
       return helperWrapper.response(
         res,
@@ -274,12 +274,13 @@ module.exports = {
         status: "active",
       };
       const result = await authModel.activationAccount(setData);
-      return helperWrapper.response(
-        res,
-        200,
-        `Aktifasi akun berhasil, silahkan login`,
-        result
-      );
+      // return helperWrapper.response(
+      //   res,
+      //   200,
+      //   `Aktifasi akun berhasil, silahkan login`,
+      //   result
+      // );
+      return res.redirect(`${process.env.APP_URL_FrontEND}/login`);
     } catch (error) {
       return helperWrapper.response(
         res,
