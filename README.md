@@ -1,7 +1,7 @@
 # Project Backgorund
 
 JobRec :
-JobRec Adalah salah satu aplikasi lamaran pekerjaan secara online yang bertujuan untuk mempermudah para pelamar dalam mencari pekerjaan serta mempermudah perekrut 
+JobRec Adalah salah satu aplikasi lamaran pekerjaan secara online yang bertujuan untuk mempermudah para pelamar dalam mencari pekerjaan serta mempermudah perekrut
 dalam mencari pelamar-pelamar. Cara kerja aplikasi ini adalah pelamar dapat menyebarkan CV, Portofolio atau pengalaman kerja mereka dalam aplikasi in
 i agar perekrut dapat melihat Cv atau portofolio para pelamar serta data diri pelamar sehingga mempermudah perekrut dalam menghubungi pelamar.
 
@@ -26,6 +26,7 @@ Fitur - Fitur dalam Project
 - Postman API testing (https://www.postman.com/api-documentation-tool/)
 
 # Roadmap
+
 - [x] API atuhenctication untuk pekerja dan perekrut
 - [x] API update profile untuk perekrut
 - [x] API update profile, upload portfolio, upload skilldan upload pengalaman kerja untuk pekerja
@@ -33,6 +34,15 @@ Fitur - Fitur dalam Project
 - [x] Upload To Github
 
 ## Deploy
+
 - [x] Front End : https://jobrec.netlify.app/
-- [x] Back  End : https://jobrec.herokuapp.com/
-- [x] Database  : Amazon Web Services 
+- [x] Back End : https://jobrec.herokuapp.com/
+- [x] Database : Amazon Web Services
+
+## Daftar Anggota
+
+- [Haris Wahyudi sebagai FullStack](https://github.com/HariisV)
+- [Fikri Nadzif sebagai BackEnd](https://github.com/LepakBoy)
+- [Wafi Pandega sebagai BackEnd](https://github.com/wafidega)
+- [Moh. Syahrul Aziz Imastara sebagai frontEnd](https://github.com/AzizImastara)
+- [Fajri Putra Pratama sebagai frontEnd](https://github.com/fajriputra)

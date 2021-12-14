@@ -140,7 +140,18 @@ module.exports = {
     try {
       const { name, companyName, bidang, email, password, nohp } = req.body;
 
-      if (!name || !companyName || !bidang || !email || !password || !nohp) {
+      // if (!name || !companyName || !bidang || !email || !password || !nohp) {
+      //   return helperWrapper.response(res, 404, `Data harus diisi semua`, null);
+      // }
+
+      if (
+        name == "" ||
+        companyName == "" ||
+        bidang == "" ||
+        email == "" ||
+        password == "" ||
+        nohp == ""
+      ) {
         return helperWrapper.response(res, 404, `Data harus diisi semua`, null);
       }
       if (password.length < 6) {
@@ -222,7 +233,7 @@ module.exports = {
       };
 
       // disable while development
-      await sendMail.verificationAccount(setDataEmail);
+      // await sendMail.verificationAccount(setDataEmail);
       const result = await authModel.registerRecruiter(setData);
 
       return helperWrapper.response(
