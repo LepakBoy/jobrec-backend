@@ -43,8 +43,8 @@ Fitur - Fitur dalam Project
 
 # Deploy
 
-- [x] Front End : https://jobrec.netlify.app/
-- [x] Back End : https://jobrec.herokuapp.com/
+- [x] Front End : [Netlify](https://jobrec.netlify.app/)
+- [x] Back End : [Heroku](https://jobrec.herokuapp.com/)
 - [x] Database : Amazon Web Services
 
 
