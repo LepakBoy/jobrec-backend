@@ -18,12 +18,12 @@ Fitur - Fitur dalam Project
 
 # Teknologi Yang Digunakan
 
-- Node Js (https://nodejs.org/en/docs/)
-- Express Js (https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/Introduction)
-- Redis (https://redis.io/documentation)
-- MySql (https://dev.mysql.com/doc/)
-- Json Web Token (https://www.npmjs.com/package/jsonwebtoken)
-- Postman API testing (https://www.postman.com/api-documentation-tool/)
+- [Node Js](https://nodejs.org/en/docs/)
+- [Express Js](https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/Introduction)
+- [Redis](https://redis.io/documentation)
+- [MySql](https://dev.mysql.com/doc/)
+- [Json Web Token](https://www.npmjs.com/package/jsonwebtoken)
+- [Postman API testing](https://www.postman.com/api-documentation-tool/)
 
 # Roadmap
 
