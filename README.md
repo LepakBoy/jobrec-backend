@@ -33,16 +33,18 @@ Fitur - Fitur dalam Project
 - [x] HTML Semantic
 - [x] Upload To Github
 
-## Deploy
+# Daftar Anggota
+
+- [Haris Wahyudi](https://github.com/HariisV) Project Manager,  Sebagai FullStack
+- [Fikri Nadzif](https://github.com/LepakBoy)  Sebagai BackEnd
+- [Wafi Pandega](https://github.com/wafidega) Sebagai BackEnd
+- [Moh. Syahrul Aziz Imastara](https://github.com/AzizImastara) Sebagai frontEnd
+- [Fajri Putra Pratama](https://github.com/fajriputra) Sebagai frontEnd
+
+# Deploy
 
 - [x] Front End : https://jobrec.netlify.app/
 - [x] Back End : https://jobrec.herokuapp.com/
 - [x] Database : Amazon Web Services
 
-## Daftar Anggota
 
-- [Haris Wahyudi sebagai FullStack](https://github.com/HariisV)
-- [Fikri Nadzif sebagai BackEnd](https://github.com/LepakBoy)
-- [Wafi Pandega sebagai BackEnd](https://github.com/wafidega)
-- [Moh. Syahrul Aziz Imastara sebagai frontEnd](https://github.com/AzizImastara)
-- [Fajri Putra Pratama sebagai frontEnd](https://github.com/fajriputra)
